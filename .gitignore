@@ -1,0 +1,3 @@
+soc-app/.env.local
+/soc-app/.next
+/soc-app/node_modules
