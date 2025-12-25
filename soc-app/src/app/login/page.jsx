@@ -1,17 +1,16 @@
 "use client";
 
-import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import { ThemeProvider } from "@mui/material/styles";
+import React from "react";
+import { FormControl, InputLabel, OutlinedInput, TextField, Checkbox, Container, Box, AppBar, Toolbar, InputAdornment, IconButton} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/navigation";
+
+// Custom Imports
+import SubmitButton from "../components/buttons/SubmitButton";
+import RedirectButton from "../components/buttons/RedirectButton";
+import ForgotPaswordButton from "./components/ForgotPasswordButton";
+
 
 export default function LoginPage() {
 
@@ -49,6 +48,20 @@ export default function LoginPage() {
 
     const router = useRouter();
 
+        // ================= Password Visibility Toggle =================
+        // https://mui.com/material-ui/react-text-field/#InputAdornments.js
+    
+        const [showPassword, setShowPassword] = React.useState(false);
+    
+        const handleClickShowPassword = () => setShowPassword((show) => !show);
+    
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+    
+        // ===============================================================
+    
+
     return (
         <>
             <CssBaseline />
@@ -73,34 +86,33 @@ export default function LoginPage() {
                             name="email"
                         />
 
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            label="Password"
-                            name="pass"
-                        />
+                        <FormControl>
+                            <InputLabel>Password</InputLabel>
+                            <OutlinedInput
+                                id="password"
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
 
-                        <FormControlLabel control={<Checkbox />} label="Remember me" />
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                        <br></br>
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3 }}
-                        >
-                            Sign In
-                        </Button>
+                        <SubmitButton text={"Login"}/>
 
-                        <Button
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3 }}
-                            onClick={() => router.push("/register")}
-                        >
-                            Don't have an account? Sign Up
-                        </Button>
+                        <RedirectButton text={"Already have an account? Sign In"} link={"register"}/>
+
+                        <ForgotPaswordButton/>
                     </Box>
                 </Box>
             </Container>
