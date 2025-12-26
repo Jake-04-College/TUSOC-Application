@@ -1,22 +1,18 @@
 "use client";
 import * as React from "react";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { DateField } from "@mui/x-date-pickers/DateField";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TextField, IconButton, InputLabel, OutlinedInput, FormHelperText, InputAdornment, FormControl } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { AppBar, Box, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Select, TextField, Toolbar, MenuItem } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import CssBaseline from "@mui/material/CssBaseline";
+import { LocalizationProvider, DateField } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 
 
 // Custom Components
 import RedirectButton from "../components/buttons/RedirectButton.jsx";
 import SubmitButton from "../components/buttons/SubmitButton.jsx";
-import { LocalizationProvider } from "@mui/x-date-pickers";
 
 
 // Theme Import
@@ -27,7 +23,23 @@ export default function RegisterPage() {
         register,
         handleSubmit,
         formState: { errors },
+        control
     } = useForm();
+
+    const [courses, setCourses] = useState([]);
+
+    const handleChange = (event) => {
+        setCourses(event.target.value);
+    };
+
+    useEffect(() => {
+        async function fetchCourses() {
+            const res = await fetch("/api/getCourses");
+            const data = await res.json();
+            setCourses(data);
+        }
+        fetchCourses();
+    }, []);
 
     const router = useRouter();
 
@@ -45,7 +57,7 @@ export default function RegisterPage() {
     // ===============================================================
 
     const onSubmit = async (data) => {
-        const res = await fetch("/api/register", {
+        const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -59,11 +71,9 @@ export default function RegisterPage() {
     };
 
 
-
-
     return (
         <>
-        <CssBaseline />
+            <CssBaseline />
             <AppBar position="static">
                 <Toolbar></Toolbar>
             </AppBar>
@@ -107,15 +117,21 @@ export default function RegisterPage() {
                         />
                         <br />
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateField
-                                label="Date of Birth"
-                                type="date"
-                                format="DD/MM/YYYY"
-                                {...register("dateOfBirth", {
-                                    required: "Date of birth is required",
-                                })}
-                                error={!!errors.dateOfBirth}
-                                helperText={errors.dateOfBirth ? errors.dateOfBirth.message : ""}
+                            <Controller
+                                name="dateOfBirth"
+                                control={control}
+                                rules={{ required: "Date of birth is required" }}
+                                render={({ field, fieldState }) => (
+                                    <DateField
+                                        {...field}
+                                        label="Date of Birth"
+                                        format="DD/MM/YYYY"
+                                        value={field.value}
+                                        onChange={(newValue) => field.onChange(newValue)}
+                                        error={!!fieldState.error}
+                                        helperText={fieldState.error?.message}
+                                    />
+                                )}
                             />
                         </LocalizationProvider>
                         <br />
@@ -134,6 +150,33 @@ export default function RegisterPage() {
                             helperText={errors.studentNumber ? errors.studentNumber.message : ""}
                         />
                         <br />
+
+                        <FormControl fullWidth error={!!errors.courseCode}>
+                            <InputLabel id="courseCode-label">Course</InputLabel>
+
+                            <Select
+                                labelId="courseCode-label"
+                                label="Course"
+                                defaultValue=""
+                                {...register("courseCode", {
+                                    required: "Course Code is required",
+                                })}
+                            >
+
+                                {courses.map((course) => (
+                                    <MenuItem key={course.courseCode} value ={course.courseCode}>
+                                        {course.courseCode} - {course.courseName}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                            <FormHelperText>
+                                {errors.courseCode?.message}
+                            </FormHelperText>
+                        </FormControl>
+
+                        <br />
+
 
                         <FormControl error={!!errors.password}>
                             <InputLabel>Password</InputLabel>
