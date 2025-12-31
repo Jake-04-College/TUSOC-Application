@@ -3,7 +3,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
-import { AppBar, Box, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Select, TextField, Toolbar, MenuItem } from "@mui/material";
+import { AppBar, Box, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Select, TextField, Toolbar, MenuItem, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LocalizationProvider, DateField } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -77,16 +77,26 @@ export default function RegisterPage() {
             <AppBar position="static">
                 <Toolbar></Toolbar>
             </AppBar>
+            <Box sx={{ minHeight: "100vh", background: "linear-gradient(180deg, #2a68b9ff 0%, #ffffff 100%)", py: 4 }}>
+
 
             <Container maxWidth="sm">
                 <Box sx={{ height: "100%", mt: 2 }}>
-                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-                        <br />
-                        <h2 style={{ textAlign: "center" }}>Create a New Account</h2>
-                        <br />
-
+                    <Box sx={{ p: 1, borderRadius: 2, boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.68)", backgroundColor: "background.paper" }}>
+                        <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+                            <Box sx={{ mb: 1, pl: 0.5 }}>
+                                <Typography variant="h3" sx={{ fontWeight: 800, textAlign: "left" }}>
+                                    Create Account.
+                                </Typography>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 500, textAlign: "left", mt: 0.5 }}>
+                                    Please enter your details.
+                                </Typography>
+                            </Box>
 
                         <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             label="Username"
                             type="text"
                             {...register("username", {
@@ -100,9 +110,10 @@ export default function RegisterPage() {
                             helperText={errors.username ? errors.username.message : ""}
                         />
 
-                        <br />
-
                         <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             label="Email Address"
                             type="email"
                             {...register("email", {
@@ -115,70 +126,8 @@ export default function RegisterPage() {
                             error={!!errors.email}
                             helperText={errors.email ? errors.email.message : ""}
                         />
-                        <br />
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <Controller
-                                name="dateOfBirth"
-                                control={control}
-                                rules={{ required: "Date of birth is required" }}
-                                render={({ field, fieldState }) => (
-                                    <DateField
-                                        {...field}
-                                        label="Date of Birth"
-                                        format="DD/MM/YYYY"
-                                        value={field.value}
-                                        onChange={(newValue) => field.onChange(newValue)}
-                                        error={!!fieldState.error}
-                                        helperText={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                        </LocalizationProvider>
-                        <br />
 
-                        <TextField
-                            label="Student Number"
-                            type="text"
-                            {...register("studentNumber", {
-                                required: "Student number is required",
-                                pattern: {
-                                    value: /^[BC]\d{8}$/i,
-                                    message: "Student number must be like B00000000 or C00000000"
-                                }
-                            })}
-                            error={!!errors.studentNumber}
-                            helperText={errors.studentNumber ? errors.studentNumber.message : ""}
-                        />
-                        <br />
-
-                        <FormControl fullWidth error={!!errors.courseCode}>
-                            <InputLabel id="courseCode-label">Course</InputLabel>
-
-                            <Select
-                                labelId="courseCode-label"
-                                label="Course"
-                                defaultValue=""
-                                {...register("courseCode", {
-                                    required: "Course Code is required",
-                                })}
-                            >
-
-                                {courses.map((course) => (
-                                    <MenuItem key={course.courseCode} value ={course.courseCode}>
-                                        {course.courseCode} - {course.courseName}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-
-                            <FormHelperText>
-                                {errors.courseCode?.message}
-                            </FormHelperText>
-                        </FormControl>
-
-                        <br />
-
-
-                        <FormControl error={!!errors.password}>
+                         <FormControl error={!!errors.password} margin="normal" fullWidth>
                             <InputLabel>Password</InputLabel>
                             <OutlinedInput
                                 id="password"
@@ -207,14 +156,85 @@ export default function RegisterPage() {
                                 {errors.password?.message}
                             </FormHelperText>
                         </FormControl>
-                        <br />
-                        <br />
-                        <SubmitButton text="Sign Up" />
-                        <br />
-                        <RedirectButton text="Already have an account? Login" link="login" />
+
+
+                        
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Controller
+                                name="dateOfBirth"
+                                control={control}
+                                rules={{ required: "Date of birth is required" }}
+                                render={({ field, fieldState }) => (
+                                    <DateField
+                                        {...field}
+                                        label="Date of Birth"
+                                        format="DD/MM/YYYY"
+                                        value={field.value}
+                                        onChange={(newValue) => field.onChange(newValue)}
+                                        error={!!fieldState.error}
+                                        helperText={fieldState.error?.message}
+                                        margin="normal"
+                                        fullWidth
+                                    />
+                                )}
+                            />
+                        </LocalizationProvider>
+
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Student Number"
+                            type="text"
+                            {...register("studentNumber", {
+                                required: "Student number is required",
+                                pattern: {
+                                    value: /^[BC]\d{8}$/i,
+                                    message: "Student number must be like B00000000 or C00000000"
+                                }
+                            })}
+                            error={!!errors.studentNumber}
+                            helperText={errors.studentNumber ? errors.studentNumber.message : ""}
+                        />
+                        <FormControl fullWidth error={!!errors.courseCode} margin="normal">
+                            <InputLabel id="courseCode-label">Course</InputLabel>
+
+                            <Select
+                                labelId="courseCode-label"
+                                label="Course"
+                                defaultValue=""
+                                {...register("courseCode", {
+                                    required: "Course Code is required",
+                                })}
+                            >
+
+                                {courses.map((course) => (
+                                    <MenuItem key={course.courseCode} value ={course.courseCode}>
+                                        {course.courseCode} - {course.courseName}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                            <FormHelperText>
+                                {errors.courseCode?.message}
+                            </FormHelperText>
+                        </FormControl>
+
+                       
+                        <Box sx={{ mt: 3 }}>
+                            <SubmitButton text="Sign Up" fullWidth />
+                        </Box>
+
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
+                            <RedirectButton text="Already have an account? Login" link="login" />
+                        </Box>
+                        </Box>
                     </Box>
                 </Box>
+                
             </Container>
+            </Box>
         </>
     );
 }
