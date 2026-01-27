@@ -3,10 +3,10 @@ import * as React from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { usePathname, useRouter } from "next/navigation";
-import { buildNavBarItems } from "./config/navConfig";
+import { buildMobileNavBarItems } from "./config/navConfig";
 
 export default function MobileNavbar({
-  isLoggedIn = false,
+  isLoggedIn = true,
   isManager = false,
 }) {
   const router = useRouter();
@@ -17,26 +17,40 @@ export default function MobileNavbar({
     Management tab is only visible to managers on a web browser */
 
   const items = React.useMemo(
-    () => buildNavBarItems({ isLoggedIn, isManager, webView: false }),
+    () => buildMobileNavBarItems({ isLoggedIn, isManager, webView: false }),
     [isLoggedIn, isManager]
   );
 
-
   // Code responsible for handing the current active tab and updating according to user navigation.
   const activeValue = React.useMemo(() => {
-    let activeItem = items.find((item) => pathname.startsWith(item.redirectLink));
+    let activeItem = items.find((item) =>
+      pathname.startsWith(item.redirectLink)
+    );
     return activeItem ? activeItem.value : null;
   }, [items, pathname]);
 
-// Code reponsible for handling tab changes and redirecting to the appropriate page if page does not exist redirect to not-found page
+  // Code reponsible for handling tab changes and redirecting to the appropriate page if page does not exist redirect to not-found page
   const handleChange = (_event, newValue) => {
     const target = items.find((item) => item.value === newValue)?.redirectLink;
-    if (target && target !== pathname) router.push(target);
-    else(router.push("/not-found"))}
+
+    if (target && target !== pathname) {
+      router.push(target);
+    } else {
+      router.push("/not-found");
+    }
+  };
 
   return (
     <BottomNavigation
-      sx={{ width: 1, position: "fixed", bottom: 0, left: 0, zIndex: 1000, backgroundColor: "#d1d5daff" }}
+      sx={{
+        display: { xs: "flex", md: "none" }, 
+        width: 1,
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        zIndex: 1000,
+        backgroundColor: "#d1d5daff",
+      }}
       value={activeValue}
       onChange={handleChange}
       showLabels

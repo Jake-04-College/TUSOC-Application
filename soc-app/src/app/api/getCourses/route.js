@@ -13,7 +13,7 @@ export async function GET(res) {
         const collection = db.collection(DB_COLLECTION);
 
         // Find any documents in the databse which which have the courses status as "active", 
-        // Return the CourseName and CourseCode
+        // return the CourseName and CourseCode
         const findResults = (await collection.find({status : "active"}).toArray()).map(course => ({
             courseName: course.course_name,
             courseCode: course.course_code,
