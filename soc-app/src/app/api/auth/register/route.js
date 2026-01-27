@@ -1,6 +1,5 @@
 import Bcrypt from "bcryptjs";
 
-
 const MONGODB_URL = process.env.MONGODB_URL
 const DB_NAME = process.env.MONGODB_DB_NAME
 

@@ -1,12 +1,24 @@
+"use client";
+
+import * as React from "react";
 import MobileNavbar from "./MobileNavbar";
+import DesktopNavbar from "./DesktopNavbar";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
-export default function NavbarDevPage() {
+export default function Navbar({ isLoggedIn, isManager }) {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-    return (
-        <div>
-            <h1>Navbar Preview</h1>
-            <p>Testing the mobile navbar rendering.</p>
-            <MobileNavbar isLoggedIn={true} isManager={true} />
-        </div>
-    );
+  /* Wrapper component to switch between Mobile and Desktop navigation bars based on screen size */
+
+  return (
+    <>
+      {isDesktop ? (
+        <DesktopNavbar isLoggedIn={true} isManager={true} />
+      ) : (
+        <MobileNavbar isLoggedIn={true} isManager={true} />
+      )}
+    </>
+  );
 }

@@ -1,6 +1,6 @@
 const MONGODB_URL = process.env.MONGODB_URL;
 const DB_NAME = process.env.MONGODB_DB_NAME;
-const DB_COLLECTION = "userPost";
+const DB_COLLECTION = "UserPosts";
 
 export async function GET() {
     if (!MONGODB_URL || !DB_NAME) {
