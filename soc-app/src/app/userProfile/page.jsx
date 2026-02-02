@@ -13,6 +13,27 @@ export default function UserProfile() {
         avatar: "https://i.pinimg.com/736x/9f/1c/34/9f1c345f24bbb6e1c33bdb6ca2ede122.jpg"
     };
 
+    const [posts, setPosts] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        async function fetchPosts() {
+            try {
+                const res = await fetch("/api/getPosts");
+                if (!res.ok) throw new Error("Failed to load posts");
+                const data = await res.json();
+                setPosts(Array.isArray(data) ? data : []);
+            } catch (error) {
+                console.error("Failed to fetch posts", error);
+                setPosts([]);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchPosts();
+    }, []);
+
     return (
         <Container maxWidth="sm">
             <Card sx={{ mt: 4, p: 2 }}>
@@ -33,7 +54,39 @@ export default function UserProfile() {
                     </Stack>
                 </CardContent>
             </Card>
+
+            <Box sx={{ height: "100%" }}>
+                <Typography variant="h4" component="h1" align="center" sx={{ mb: 3 }}>
+                    {user.username}'s Posts
+                </Typography>
+
+                {isLoading ? (
+                    <Typography variant="body1" align="center">
+                        Loading posts...
+                    </Typography>
+                ) : posts.length === 0 ? (
+                    <Typography variant="body1" align="center">
+                        No posts yet.
+                    </Typography>
+                ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, }}>
+                        {posts.map((post) => (
+                            <MediaCard
+                                key={post._id}
+                                username={post.username}
+                                timePosted={post.timePosted}
+                                title={post.title}
+                                image={post.image}
+                                likes={post.likes}
+                                comments={post.comments}
+                                profilePic={post.profilePic}
+                            />
+                        ))}
+                    </Box>
+                )}
+            </Box>
         </Container>
+
     );
 }
 
