@@ -1,8 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { AppBar, Avatar, Box, Container, CssBaseline, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Card, CardContent, Container, CssBaseline, Toolbar, Typography } from "@mui/material";
 import MediaCard from "../components/MediaCard";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 
 export default function SocietyPage() {
     const name = "My Society";
@@ -30,14 +35,14 @@ export default function SocietyPage() {
             fetchPosts();
         }, []);
 
-    return (
+return (
         <>
             <CssBaseline />
             <AppBar position="static">
                 <Toolbar />
             </AppBar>
 
-            <Box sx={{ position: "relative", width: "100%", height: 220, mb: 6 }}>
+            <Box sx={{ position: "relative", width: "100%", height: 220, mb: 12 }}>
                 <Box
                     sx={{
                         position: "absolute",
@@ -64,13 +69,14 @@ export default function SocietyPage() {
                     }}
                 />
                 <Typography
-                    variant="h5"
+                    variant="h4"
                     sx={{
                         position: "absolute",
                         left: 380,
                         bottom: -70,
                         fontWeight: 600,
-                        size: 120
+                        size: 180
+                         
                     }}
                 >
                     Society Name
@@ -147,19 +153,66 @@ export default function SocietyPage() {
                                         borderLeft: { xs: "none", md: "px solid rgba(0, 0, 0, 0)" },
                                         borderRadius: 2,
                                         pl: { xs: 4, md: 7 },
-                                        bgcolor: "rgba(0, 0, 0, 0.36)",
                                         height: "100%",
                                         minHeight: "100vh",
-                                         
                                     }}
                                 >
-                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                        Filler Text
-                                    </Typography>
+                                    <Card sx={{ mb: 2, width: 300, height: 500, bgcolor: '#e9e8e8' }}>
+                                        <CardContent sx={{ 
+                                            height: '100%', 
+                                            display: 'flex', 
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between'
+                                        }}>
+                                            <Box>
+                                                <Typography variant="h6" component="h2" gutterBottom>
+                                                    About This Society
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                   return (
+    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+      <InputLabel id="demo-select-small-label">Age</InputLabel>
+      <Select
+        labelId="demo-select-small-label"
+        id="demo-select-small"
+        value={age}
+        label="Age"
+        onChange={handleChange}
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </Select>
+    </FormControl>
+  );
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary" >
+                                                    Duis aute irure dolor in reprehenderit in voluptate velit esse 
+                                                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat 
+                                                    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.
+                                                </Typography>
+                                            </Box>
+                                            <Button 
+                                                variant="outlined" 
+                                                fullWidth
+                                                sx={{ 
+                                                    bgcolor: '#1976d2',
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        bgcolor: '#1565c0'
+                                                    }
+                                                }}
+                                            >
+                                                Events
+                                            </Button>
+                                        </CardContent>
+                                    </Card>
                                 </Box>
                             </Box>
                         </Container>
         </>
     );
 }
-
