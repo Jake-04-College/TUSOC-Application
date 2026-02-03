@@ -72,7 +72,6 @@ export default function DesktopNavbar({
                     {/* Desktop nav items */}
                     <Box sx={{ flexGrow: 1, display: "flex" }}>
                         {items.map((item) => {
-                            // Optional: show icon on desktop buttons
                             const Icon = item.icon;
 
                             return (
@@ -81,6 +80,7 @@ export default function DesktopNavbar({
                                     onClick={() => go(item.redirectLink)}
                                     sx={{ my: 2, color: "white", display: "flex", gap: 1 }}
                                 >
+                                    <Icon sx={{ pl: 1 }} />
                                     {item.navName}
                                 </Button>
                             );
@@ -88,6 +88,7 @@ export default function DesktopNavbar({
                     </Box>
 
                     {/* User avatar menu */}
+                    {isLoggedIn && (
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton
@@ -125,13 +126,18 @@ export default function DesktopNavbar({
                                         }
                                     }}
                                 >
-                                    <Typography textAlign="center">{setting.navName}</Typography>
+                                    <Typography textAlign="center"><setting.icon sx={{ mr: 1 }} />{setting.navName}</Typography>
+                            
                                 </MenuItem>
                             ))}
-
-                        </Menu>
-                    </Box>
-                </Toolbar>
+                
+        </Menu>
+    </Box>
+    )}
+    <Button variant="contained" color="primary"onClick={() => go(isLoggedIn ? "/logout" : "/login")} sx={{ ml: 2 }}>
+        {isLoggedIn ? "Logout" : "Login"}
+    </Button>
+</Toolbar>
             </Container>
         </AppBar>
     );

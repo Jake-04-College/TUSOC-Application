@@ -34,7 +34,7 @@ export default function RegisterPage() {
 
     useEffect(() => {
         async function fetchCourses() {
-            const res = await fetch("/api/getCourses");
+            const res = await fetch("/api/get/getCourses");
             const data = await res.json();
             setCourses(data);
         }

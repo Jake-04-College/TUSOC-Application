@@ -4,6 +4,7 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MessagesIcon from '@mui/icons-material/Chat';
 import SocietiesIcon from '@mui/icons-material/Group';
+import { Home, Settings } from '@mui/icons-material';
 
 
 /* Configuration for the Mobile navigation bar */
@@ -46,17 +47,17 @@ export const mobileConfig = {
 };
 /* Configuration for the Desktop navigation bar */
 export const DesktopMainConfig = {
-  messages: {
-    label: "Messages",
-    page: "/messages",
-    icon: MessagesIcon,
-    isLoggedin: true, // User must be logged in to see this tab
+  home: {
+    label: "Home",
+    page: "/home",
+    icon: Home,
+    isLoggedin: false,
   },
   societies: {
-    label: "Your Societies",
+    label: "Societies",
     page: "/societies",
     icon: SocietiesIcon,
-    isLoggedin: true, // User must be logged in to see this tab
+    isLoggedin: false, 
   },
   management: {
     label: "Management",
@@ -71,8 +72,15 @@ export const DesktopSettingsConfig = {
   logout: {
     label: "Logout",
     page: "/logout",
+    icon: LoginRoundedIcon,
   },
-};
+
+  Settings: {
+    label: "Settings",
+    page: "/settings",
+    icon: Settings,
+},
+}
 
 // Function to build Desktop navigation bar items based on user status
 

@@ -1,13 +1,10 @@
-const MONGODB_URL = process.env.MONGODB_URL
+import clientPromise from "../../../../lib/mongoConnection";
 const DB_NAME = process.env.MONGODB_DB_NAME
 const DB_COLLECTION = "Courses";
 
 export async function GET(res) {
     try {
-        const { MongoClient } = require("mongodb");
-        const client = new MongoClient(MONGODB_URL);
-
-        await client.connect();
+        const client = await clientPromise;
 
         const db = client.db(DB_NAME);
         const collection = db.collection(DB_COLLECTION);

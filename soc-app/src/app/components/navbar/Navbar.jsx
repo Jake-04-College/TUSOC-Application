@@ -15,7 +15,7 @@ export default function Navbar({ isLoggedIn, isManager }) {
   return (
     <>
       {isDesktop ? (
-        <DesktopNavbar isLoggedIn={true} isManager={true} />
+        <DesktopNavbar isLoggedIn={false} isManager={false} />
       ) : (
         <MobileNavbar isLoggedIn={true} isManager={true} />
       )}

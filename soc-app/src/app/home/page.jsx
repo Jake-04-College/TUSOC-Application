@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { AppBar, Box, Container, CssBaseline, Toolbar, Typography } from "@mui/material";
+import { Box, Container, CssBaseline, Typography } from "@mui/material";
 import MediaCard from "../components/mediacard/MediaCard";
+import NavBar from "../components/navbar/Navbar";
 
 export default function HomePage() {
     const [posts, setPosts] = React.useState([]);
@@ -11,7 +12,7 @@ export default function HomePage() {
     React.useEffect(() => {
         async function fetchPosts() {
             try {
-                const res = await fetch("/api/getPosts");
+                const res = await fetch("/api/get/getPosts");
                 if (!res.ok) throw new Error("Failed to load posts");
                 const data = await res.json();
                 setPosts(Array.isArray(data) ? data : []);
@@ -29,15 +30,7 @@ export default function HomePage() {
     return (
         <>
             <CssBaseline />
-            <AppBar position="static">
-                <Toolbar />
-            </AppBar>
-
-            <box>
-              <Typography variant="h4" component="h1" align="center" sx={{ mb: 3 }}>
-                            Media Feed
-                        </Typography>
-            </box>
+            <NavBar/>
                     
 
             <Container maxWidth="lg">
