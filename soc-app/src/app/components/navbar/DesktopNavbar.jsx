@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,12 +15,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRouter } from "next/navigation";
 import { buildDesktopNavBarItems, buildDesktopSettingsMenuItems } from "./config/navConfig";
+import { useSession } from "next-auth/react";
+import { LoginButton, LogoutButton } from "../buttons/buttons";
 
-export default function DesktopNavbar({
-    isLoggedIn = false,
-    isManager = false,
+export default function DesktopNavbar() {
+    const { data: session, status } = useSession();
+    const isLoggedIn = !!session;
+    const isManager = null;
 
-}) {
     const router = useRouter();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -33,11 +36,6 @@ export default function DesktopNavbar({
         [isLoggedIn, isManager]
     );
 
-    React.useEffect(() => {
-        console.log({ isLoggedIn, isManager, items });
-    }, [isLoggedIn, isManager, items]);
-
-
     const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
@@ -47,7 +45,6 @@ export default function DesktopNavbar({
         <AppBar position="static" sx={{ display: { xs: "none", md: "block" } }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    {/* Desktop logo */}
                     <AdbIcon sx={{ mr: 1 }} />
                     <Typography
                         variant="h6"
@@ -66,78 +63,73 @@ export default function DesktopNavbar({
                             cursor: "pointer",
                         }}
                     >
-                        LOGO
+                        {session?.user?.name}
                     </Typography>
 
-                    {/* Desktop nav items */}
                     <Box sx={{ flexGrow: 1, display: "flex" }}>
                         {items.map((item) => {
                             const Icon = item.icon;
-
                             return (
                                 <Button
                                     key={item.value}
                                     onClick={() => go(item.redirectLink)}
                                     sx={{ my: 2, color: "white", display: "flex", gap: 1 }}
                                 >
-                                    <Icon sx={{ pl: 1 }} />
+                                    {Icon ? <Icon sx={{ pl: 1 }} /> : null}
                                     {item.navName}
                                 </Button>
                             );
                         })}
                     </Box>
 
-                    {/* User avatar menu */}
                     {isLoggedIn && (
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton
-                                onClick={handleOpenUserMenu}
-                                sx={{ p: 0 }}
-                                aria-controls="menu-user"
-                                aria-haspopup="true"
-                            >
-                                <Avatar alt="User" src="/static/images/avatar/2.jpg" />
-                            </IconButton>
-                        </Tooltip>
-
-                        <Menu
-                            id="menu-user"
-                            sx={{ mt: "45px" }}
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem
-                                    key={setting.value}
-                                    onClick={() => {
-                                        handleCloseUserMenu();
-                                        if (setting.redirectLink) {
-                                            router.push(setting.redirectLink);
-                                        }
-                                    }}
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Open settings">
+                                <IconButton
+                                    onClick={handleOpenUserMenu}
+                                    sx={{ p: 0 }}
+                                    aria-controls="menu-user"
+                                    aria-haspopup="true"
                                 >
-                                    <Typography textAlign="center"><setting.icon sx={{ mr: 1 }} />{setting.navName}</Typography>
-                            
-                                </MenuItem>
-                            ))}
-                
-        </Menu>
-    </Box>
-    )}
-    <Button variant="contained" color="primary"onClick={() => go(isLoggedIn ? "/logout" : "/login")} sx={{ ml: 2 }}>
-        {isLoggedIn ? "Logout" : "Login"}
-    </Button>
-</Toolbar>
+                                    <Avatar src={session?.user?.image || undefined}/>
+                                </IconButton>
+                            </Tooltip>
+
+                            <Menu
+                                id="menu-user"
+                                sx={{ mt: "45px" }}
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {settings.map((setting) => {
+                                    const SettingIcon = setting.icon;
+                                    return (
+                                        <MenuItem
+                                            key={setting.value}
+                                            onClick={() => {
+                                                handleCloseUserMenu();
+                                                if (setting.redirectLink) router.push(setting.redirectLink);
+                                            }}
+                                        >
+                                            <Typography
+                                                textAlign="center"
+                                                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                                            >
+                                                {SettingIcon ? <SettingIcon /> : null}
+                                                {setting.navName}
+                                            </Typography>
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Menu>
+                        </Box>
+                    )}
+
+                    {status !== "loading" && (isLoggedIn ? <LogoutButton /> : <LoginButton />)}
+                </Toolbar>
             </Container>
         </AppBar>
     );

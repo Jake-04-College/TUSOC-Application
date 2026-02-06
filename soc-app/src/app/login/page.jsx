@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 // Custom Imports
-import SubmitButton from "../components/buttons/SubmitButton";
+import { SubmitButton } from '../components/buttons/buttons'
 
 
 export default function LoginPage() {
