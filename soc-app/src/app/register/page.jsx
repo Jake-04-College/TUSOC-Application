@@ -13,6 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // Custom Components
 import RedirectButton from "../components/buttons/RedirectButton.jsx";
 import SubmitButton from "../components/buttons/SubmitButton.jsx";
+import LoginButton from "../components/buttons/LoginButton.jsx";
 
 
 // Theme Import
@@ -221,20 +222,24 @@ export default function RegisterPage() {
                             </FormHelperText>
                         </FormControl>
 
-                       
                         <Box sx={{ mt: 3 }}>
                             <SubmitButton text="Sign Up" fullWidth />
                         </Box>
 
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
                             <RedirectButton text="Already have an account? Login" link="login" />
+
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
+                            <LoginButton/>
                         </Box>
-                        </Box>
+
                     </Box>
                 </Box>
-                
-            </Container>
             </Box>
+        </Box>
+                
+        </Container>
+    </Box>
         </>
     );
 }
