@@ -3,6 +3,7 @@
 import * as React from "react";
 import {AppBar, Avatar, Box, Button, Card, CardContent, Container, CssBaseline, Stack, Toolbar, Typography, Grid } from "@mui/material";
 import MediaCard from "../components/MediaCard";
+import {useRouter} from "next/navigation";
 
 export default function UserProfile() {
     const user = {
@@ -10,11 +11,13 @@ export default function UserProfile() {
         username: "BrevInTheHouse",
         pronouns: "He/Him",
         bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        avatar: "https://i.pinimg.com/736x/9f/1c/34/9f1c345f24bbb6e1c33bdb6ca2ede122.jpg"
+        avatar: "https://i.pinimg.com/736x/9f/1c/34/9f1c345f24bbb6e1c33bdb6ca2ede122.jpg",
+        course:"Computing - TU860"
     };
 
     const [posts, setPosts] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const router = useRouter();
 
     React.useEffect(() => {
         async function fetchPosts() {
@@ -48,9 +51,20 @@ export default function UserProfile() {
                             {user.pronouns}
                         </Typography>
                         
+                        <Typography color="text.secondary">
+                            {user.course}
+                        </Typography>
+                        
                         <Typography align="center">
                             {user.bio}
                         </Typography>
+                        
+                        {/*
+                        <Button variant="contained" 
+                        onClick={() => router.push("/editProfile")}>
+                            Edit Profile
+                        </Button>
+                        */}
                     </Stack>
                 </CardContent>
             </Card>
