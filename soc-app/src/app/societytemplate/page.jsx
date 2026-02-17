@@ -18,6 +18,9 @@ export default function SocietyPage() {
     const [societies, setSocieties] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
+    const [age, setAge] = React.useState("");
+    const handleChange = (event) => setAge(event.target.value);
+
     React.useEffect(() => {
         async function fetchSocieties() {
             try {
@@ -124,22 +127,22 @@ export default function SocietyPage() {
                             <Typography variant="body1" align="center">
                                 Loading posts...
                             </Typography>
-                        ) : posts.length === 0 ? (
+                        ) : societies.length === 0 ? (
                             <Typography variant="body1" align="center">
                                 No posts yet.
                             </Typography>
                         ) : (
-                            <Box sx={{ display: "flex", flexDirection: "column", gap: 1, }}>
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                 {societies.map((society) => (
                                     <MediaCard
-                                        key={post._id}
-                                        username={post.username}
-                                        timePosted={post.timePosted}
-                                        title={post.title}
-                                        image={post.image}
-                                        likes={post.likes}
-                                        comments={post.comments}
-                                        profilePic={post.profilePic}
+                                        key={society._id}
+                                        username={society.username}
+                                        timePosted={society.timePosted}
+                                        title={society.title}
+                                        image={society.image}
+                                        likes={society.likes}
+                                        comments={society.comments}
+                                        profilePic={society.profilePic}
                                     />
                                 ))}
                             </Box>
@@ -169,23 +172,7 @@ export default function SocietyPage() {
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         return (
-                                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                            <InputLabel id="demo-select-small-label">Age</InputLabel>
-                                            <Select
-                                                labelId="demo-select-small-label"
-                                                id="demo-select-small"
-                                                value={age}
-                                                label="Age"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                        
                                         );
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" >
