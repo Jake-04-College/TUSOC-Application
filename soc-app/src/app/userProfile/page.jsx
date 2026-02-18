@@ -59,12 +59,12 @@ export default function UserProfile() {
                             {user.bio}
                         </Typography>
                         
-                        {/*
+                        {
                         <Button variant="contained" 
                         onClick={() => router.push("/editProfile")}>
                             Edit Profile
                         </Button>
-                        */}
+                        }
                     </Stack>
                 </CardContent>
             </Card>
