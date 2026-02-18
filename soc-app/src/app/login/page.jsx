@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 // Custom Imports
-import { SubmitButton } from '../components/buttons/buttons'
+import { SubmitButton, SSOLoginButton } from '../components/buttons/buttons'
 
 
 export default function LoginPage() {
@@ -25,7 +25,7 @@ export default function LoginPage() {
     }; // end handler
 
     async function runDBCallAsync(email, pass) {
-        const res = await fetch("http://localhost:3000/api/login", {
+        const res = await fetch("http://localhost:3000/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password: pass }),
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 <Toolbar></Toolbar>
             </AppBar>
 
-            <Box sx={{ minHeight: "100vh", background: "linear-gradient(180deg, #2a68b9ff 0%, #ffffff 100%)", py: 4 }}>
+            <Box sx={{ minHeight: "100vh", background: "background.paper", py: 4 }}>
             <Container maxWidth="sm">
                 <Box sx={{ height: "100%", mt: 2 }}>
                     <Box sx={{ p: 1, borderRadius: 2, boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.68)", backgroundColor: "background.paper", height: "700" }}>
@@ -114,6 +114,10 @@ export default function LoginPage() {
 
                         <Box sx={{ mt: 3 }}>
                             <SubmitButton text={"Login"} fullWidth />
+                        </Box>
+
+                        <Box sx={{ mt: 3 }}>
+                            <SSOLoginButton />
                         </Box>
 
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 23, mt: 2, fontSize: "0.9rem", pt: 25 }}>

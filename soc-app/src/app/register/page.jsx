@@ -226,16 +226,15 @@ export default function RegisterPage() {
 
                                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
                                     <RedirectButton text="Already have an account? Login" link="login" />
+                                </Box>
 
-                                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
-                                        <SSOLoginButton />
-                                    </Box>
+                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
+                                    <SSOLoginButton />
+                                </Box>
 
                                 </Box>
                             </Box>
                         </Box>
-                    </Box>
-
                 </Container>
             </Box>
         </>
