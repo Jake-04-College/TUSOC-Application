@@ -1,6 +1,7 @@
 /* Icons Imports */
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MessagesIcon from '@mui/icons-material/Chat';
 import SocietiesIcon from '@mui/icons-material/Group';
@@ -57,7 +58,7 @@ export const DesktopMainConfig = {
     label: "Societies",
     page: "/societies",
     icon: SocietiesIcon,
-    isLoggedin: false, 
+    isLoggedin: false,
   },
   management: {
     label: "Management",
@@ -69,27 +70,34 @@ export const DesktopMainConfig = {
 };
 /* Configuration for the Desktop Settings menu */
 export const DesktopSettingsConfig = {
-  logout: {
-    label: "Logout",
-    page: "/logout",
-    icon: LoginRoundedIcon,
+  Profile: {
+    label: "Profile",
+    page: (userID) => (userID ? `/profile/${userID}` : "/login"),
+    icon: AccountBoxIcon,
+    isLoggedin: true, // User must be logged in to see this option
   },
 
   Settings: {
     label: "Settings",
     page: "/settings",
     icon: Settings,
-},
+    isLoggedIn: true, // User must be logged in to see this option
+  },
+
+
 }
 
 // Function to build Desktop navigation bar items based on user status
 
-export function buildDesktopNavBarItems({isLoggedIn, isManager, webView }) {
+export function buildDesktopNavBarItems({ isLoggedIn, isManager, webView }) {
   return Object.entries(DesktopMainConfig)
     .filter(([key, item]) => {
       if (item.isLoggedin && !isLoggedIn) return false;
       if (item.isManager && !isManager) return false;
       if (item.webOnly && !webView) return false;
+      if (item.page === "/profile" && !isLoggedIn) return false; // Don't show profile tab if user is not logged in
+      if (item.page === "/login" && isLoggedIn) return false; // Don't show login tab if user is already logged in
+      if (item.page === "/register" && isLoggedIn) return false; // Don't show register tab if user is already logged in
       return true;
     })
     .map(([value, item]) => ({
@@ -102,24 +110,25 @@ export function buildDesktopNavBarItems({isLoggedIn, isManager, webView }) {
 
 // Function to build Desktop settings menu items based on user status
 
-export function buildDesktopSettingsMenuItems({isLoggedIn, isManager, webView }) {
+export function buildDesktopSettingsMenuItems({ isLoggedIn, isManager, webView, userID }) {
   return Object.entries(DesktopSettingsConfig)
     .filter(([key, item]) => {
       if (item.isLoggedin && !isLoggedIn) return false;
       if (item.isManager && !isManager) return false;
       if (item.webOnly && !webView) return false;
+
       return true;
     })
     .map(([value, item]) => ({
       value,
       navName: item.label,
-      redirectLink: item.page,
+      redirectLink: typeof item.page === "function" ? item.page(userID) : item.page,
       icon: item.icon,
     }));
 }
 
 /* Function to build Mobile navigation bar items based on user status */
-export function buildMobileNavBarItems({isLoggedIn, isManager, webView }) {
+export function buildMobileNavBarItems({ isLoggedIn, isManager, webView }) {
   return Object.entries(mobileConfig)
     .filter(([key, item]) => {
       if (item.isLoggedin && !isLoggedIn) return false;

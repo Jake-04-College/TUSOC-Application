@@ -84,10 +84,12 @@ export default function SocietyPage() {
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1, }}>
                         {posts.map((post) => (
                             <SocietyCard
-                            key={post._id} 
+                            key={post._id}
+                            societyID={post._id}
                             societyName={post.Soc_Name}
                             membersCount={post.Member_Count}
                             societyDescription={post.Soc_Desc}
+                            
                             />
                         ))}
                     </Box>

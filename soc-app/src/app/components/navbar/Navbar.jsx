@@ -5,8 +5,15 @@ import MobileNavbar from "./MobileNavbar";
 import DesktopNavbar from "./DesktopNavbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useSession } from "next-auth/react";
 
-export default function Navbar({ isLoggedIn, isManager }) {
+
+
+
+
+export default function Navbar({ isManager = false }) {
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -15,9 +22,9 @@ export default function Navbar({ isLoggedIn, isManager }) {
   return (
     <>
       {isDesktop ? (
-        <DesktopNavbar isLoggedIn={false} isManager={false} />
+        <DesktopNavbar />
       ) : (
-        <MobileNavbar isLoggedIn={true} isManager={true} />
+        <MobileNavbar isLoggedIn={isLoggedIn} isManager={isManager} />
       )}
     </>
   );

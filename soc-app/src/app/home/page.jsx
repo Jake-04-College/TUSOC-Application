@@ -83,6 +83,7 @@ export default function HomePage() {
                                 {posts.map((post) => (
                                     <MediaCard
                                         key={post._id}
+                                        userID={post.userID}
                                         username={post.username}
                                         timePosted={post.timePosted}
                                         title={post.title}

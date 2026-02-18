@@ -7,13 +7,15 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import { RedirectButton } from "../buttons/buttons"
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-export default function SocietyCard({societyName, membersCount, societyDescription}) {
+export default function SocietyCard({societyID, societyName, membersCount, societyDescription}) {
     return (
-        <Card
+        <>
+  "      <Card
             elevation={0}
             sx={{
                 mb: 2,
@@ -42,9 +44,7 @@ export default function SocietyCard({societyName, membersCount, societyDescripti
                         </Typography>
                     </Box>
                 </Box>
-                <Button variant="contained">
-                    Join Society
-                </Button>
+                <RedirectButton text={"Join society"} link={`societies/${societyID}`}> </RedirectButton>
             </Box>
 
             <Box sx={{ px: 2, pb: 2 }}>
@@ -53,5 +53,6 @@ export default function SocietyCard({societyName, membersCount, societyDescripti
                 </Typography>
             </Box>
         </Card>
+    </>
     );
 }

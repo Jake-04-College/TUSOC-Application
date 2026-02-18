@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import Link from 'next/link';
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -43,6 +44,7 @@ function timeSincePost(value) {
 }
 
 export default function MediaCard({
+  userID,
   username,
   timePosted,
   title,
@@ -59,7 +61,7 @@ export default function MediaCard({
       elevation={0}
       sx={{
         mb: 2,
-        
+
         backgroundColor: 'transparent',
         boxShadow: 'none',
       }}
@@ -77,8 +79,7 @@ export default function MediaCard({
         <Avatar
           src={profilePic}
           sx={{ width: 32, height: 32, bgcolor: '#0079d3' }}
-        >
-          {!profilePic && username?.charAt(0)?.toUpperCase()}
+        > {!profilePic && username?.charAt(0)?.toUpperCase()}
         </Avatar>
 
         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, flexWrap: 'wrap' }}>
@@ -87,7 +88,7 @@ export default function MediaCard({
             component="span"
             sx={{ fontWeight: 600, fontSize: '0.875rem' }}
           >
-            {username}
+            <Link href={`/profile/${userID}`}>{username}</Link>
           </Typography>
           <Typography
             variant="caption"

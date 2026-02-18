@@ -44,7 +44,8 @@ export function RedirectButton({ text, link }) {
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
-            onClick={() => router.push('/' + link)}
+            onClick={() => router.push(link.startsWith("/") ? link : `/${link}`)}
+
         >
             {text}
         </Button>
