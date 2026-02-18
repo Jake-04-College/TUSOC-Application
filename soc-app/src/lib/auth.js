@@ -43,7 +43,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             session.user.role = userData?.role ?? "user";
             session.user.courseCode = userData?.courseCode ?? null;
             session.user.onboarded = !!userData?.onboarded;
-            session.user.id = userData.id;
+            
+            if (userData?._id) session.user.id = userData._id.toString();
 
             return session;
         },
