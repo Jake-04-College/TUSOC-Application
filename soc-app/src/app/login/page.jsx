@@ -6,6 +6,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 // Custom Imports
 import { SubmitButton, SSOLoginButton } from '../components/buttons/buttons'
@@ -25,21 +26,29 @@ export default function LoginPage() {
     }; // end handler
 
     async function runDBCallAsync(email, pass) {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password: pass }),
+        const cleanEmail = String(email || "").trim().toLowerCase();
+        const cleanPassword = String(pass || "");
+
+        if (!cleanEmail || !cleanPassword) {
+            console.log("Email and password are required");
+            return;
+        }
+
+        const result = await signIn("credentials", {
+            email: cleanEmail,
+            password: cleanPassword,
+            redirect: false,
+            callbackUrl: "/home",
         });
 
-        const data = await res.json();
-
-        if (data.valid) {
+        if (result?.ok) {
             console.log("login is valid!");
-            console.log("User found:", data);
+            router.push("/home");
+            router.refresh();
 
         } else {
             console.log("not valid");
-            console.log("User found:", data);
+            console.log("Login error:", result?.error);
 
         }
     }
@@ -94,6 +103,7 @@ export default function LoginPage() {
                             <InputLabel>Password</InputLabel>
                             <OutlinedInput
                                 id="password"
+                                name="pass"
                                 label="Password"
                                 type={showPassword ? "text" : "password"}
 

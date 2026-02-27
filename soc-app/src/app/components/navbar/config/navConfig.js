@@ -5,6 +5,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MessagesIcon from '@mui/icons-material/Chat';
 import SocietiesIcon from '@mui/icons-material/Group';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Home, Settings } from '@mui/icons-material';
 
 
@@ -21,6 +22,12 @@ export const mobileConfig = {
     page: "/societies",
     icon: SocietiesIcon,
     isLoggedin: true, // User must be logged in to see this tab
+  },
+  post: {
+    label: "Post",
+    page: (isLoggedIn) => (isLoggedIn ? "/postPage" : "/login"),
+    icon: AddCircleOutlineIcon,
+    isLoggedin: false,
   },
   management: {
     label: "Management",
@@ -58,6 +65,12 @@ export const DesktopMainConfig = {
     label: "Societies",
     page: "/societies",
     icon: SocietiesIcon,
+    isLoggedin: false,
+  },
+  post: {
+    label: "Post",
+    page: (isLoggedIn) => (isLoggedIn ? "/postPage" : "/login"),
+    icon: AddCircleOutlineIcon,
     isLoggedin: false,
   },
   management: {
@@ -103,7 +116,7 @@ export function buildDesktopNavBarItems({ isLoggedIn, isManager, webView }) {
     .map(([value, item]) => ({
       value,
       navName: item.label,
-      redirectLink: item.page,
+      redirectLink: typeof item.page === "function" ? item.page(isLoggedIn) : item.page,
       icon: item.icon,
     }));
 }
@@ -139,7 +152,7 @@ export function buildMobileNavBarItems({ isLoggedIn, isManager, webView }) {
     .map(([value, item]) => ({
       value,
       navName: item.label,
-      redirectLink: item.page,
+      redirectLink: typeof item.page === "function" ? item.page(isLoggedIn) : item.page,
       icon: item.icon,
     }));
 }

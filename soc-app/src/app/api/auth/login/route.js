@@ -6,10 +6,20 @@ const url = process.env.MONGODB_URL;
 const dbName = process.env.MONGODB_DB_NAME
 
 export async function POST(request) {
+  let client;
   try {
     const data = await request.json();
-    const { email, password } = data;
-    const client = new MongoClient(url);
+    const email = String(data?.email || "").trim().toLowerCase();
+    const password = String(data?.password || "");
+
+    if (!email || !password) {
+      return new NextResponse(
+        JSON.stringify({ valid: false, message: "Email and password are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    client = new MongoClient(url);
     await client.connect();
     console.log("Connected successfully to server");
 
@@ -17,9 +27,22 @@ export async function POST(request) {
     const collection = db.collection("UserDetails");
 
     const user = await collection.findOne({ email });
+    if (!user) {
+      return new NextResponse(
+        JSON.stringify({ valid: false, message: "Invalid username or password" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
-    const passwordMatch = await Bcrypt.compare(password, user.pass);
-    await client.close();
+    const storedHash = user.hashedPassword || user.pass;
+    if (!storedHash) {
+      return new NextResponse(
+        JSON.stringify({ valid: false, message: "Invalid username or password" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const passwordMatch = await Bcrypt.compare(password, storedHash);
 
     if (passwordMatch) {
       console.log("Login valid");
@@ -40,5 +63,9 @@ export async function POST(request) {
       JSON.stringify({ error: "Internal Server Error" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 }
