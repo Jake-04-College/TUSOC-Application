@@ -85,15 +85,11 @@ export default function PostPage() {
                 const formData = new FormData();
                 formData.append("image", selectedImage);
 
-                const imageUploadRes = await fetch("/api/cloudinary", {
-                    method: "POST",
-                    body: formData,
-                });
+                const imageUploadRes = await fetch("/api/cloudinary", {method: "POST", body: formData});
 
                 const imageUploadData = await imageUploadRes.json();
-                if (!imageUploadRes.ok) {
-                    throw new Error(imageUploadData?.error || "Image upload failed");
-                }
+
+                if (!imageUploadRes.ok) { throw new Error(imageUploadData?.error || "Image upload failed"); }
 
                 imageUrl = imageUploadData.imageUrl || "";
             }

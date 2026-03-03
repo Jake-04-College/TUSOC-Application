@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { Box, Container, CssBaseline, Typography } from "@mui/material";
-import MediaCard from "../components/mediacard/MediaCard";
 import NavBar from "../components/navbar/Navbar";
+import { MediaCard } from "../components/cards/cards.jsx";
 
 export default function HomePage() {
     const [posts, setPosts] = React.useState([]);

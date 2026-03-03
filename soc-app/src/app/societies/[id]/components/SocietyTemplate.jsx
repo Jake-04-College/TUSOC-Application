@@ -1,18 +1,7 @@
 "use client";
 
-import {
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Container,
-    CssBaseline,
-    Divider,
-    Typography,
-} from "@mui/material";
+import {Avatar, Box, Button,  Card, CardContent, Container, CssBaseline, Typography} from "@mui/material";
 import Navbar from "../../../components/navbar/Navbar"
-import MediaCard from "../../../components/MediaCard"
 
 export default function SocietyTemplate({ society, posts }) {
     const bannerUrl = society?.Soc_Banner;

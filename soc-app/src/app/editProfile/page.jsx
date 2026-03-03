@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {AppBar, Avatar, Box, Button, Card, CardContent, Container, CssBaseline, Stack, TextField, Toolbar, Typography, Grid } from "@mui/material";
-import MediaCard from "../components/MediaCard";
+import { Avatar, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import {useRouter} from "next/navigation";
 
 export default function EditProfile(){

@@ -1,17 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { AppBar, Avatar, Box, Button, Card, CardContent, Container, CssBaseline, Toolbar, Typography } from "@mui/material";
-import MediaCard from "../components/MediaCard.jsx";
-import SocietyCard from "../components/societycard/societyCard.jsx";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {Box, Card, CardContent, Container, CssBaseline, Typography } from "@mui/material";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import NavBar from "../components/navbar/Navbar.jsx";
+import { SocietyCard } from "../components/cards/cards.jsx";
 
 
 

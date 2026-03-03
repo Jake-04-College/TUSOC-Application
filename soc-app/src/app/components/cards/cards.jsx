@@ -1,14 +1,14 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
-
+import Link from 'next/link';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';;
+import { RedirectButton } from "../buttons/buttons";
 
 /**
  * Returns human-readable relative time
@@ -42,15 +42,7 @@ function timeSincePost(value) {
   return 'just now';
 }
 
-export default function MediaCard({
-  username,
-  timePosted,
-  title,
-  likes,
-  comments,
-  profilePic,
-  image,
-}) {
+export function MediaCard({ userID, username, timePosted, title, likes, comments, profilePic, image}) {
   const likesCount = parseInt(likes, 10) || 0;
   const commentsCount = parseInt(comments, 10) || 0;
 
@@ -59,7 +51,7 @@ export default function MediaCard({
       elevation={0}
       sx={{
         mb: 2,
-        
+
         backgroundColor: 'transparent',
         boxShadow: 'none',
       }}
@@ -77,8 +69,7 @@ export default function MediaCard({
         <Avatar
           src={profilePic}
           sx={{ width: 32, height: 32, bgcolor: '#0079d3' }}
-        >
-          {!profilePic && username?.charAt(0)?.toUpperCase()}
+        > {!profilePic && username?.charAt(0)?.toUpperCase()}
         </Avatar>
 
         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, flexWrap: 'wrap' }}>
@@ -87,7 +78,7 @@ export default function MediaCard({
             component="span"
             sx={{ fontWeight: 600, fontSize: '0.875rem' }}
           >
-            {username}
+            <Link href={`/profile/${userID}`}>{username}</Link>
           </Typography>
           <Typography
             variant="caption"
@@ -142,4 +133,49 @@ export default function MediaCard({
       </CardActions>
     </Card>
   );
+}
+
+export function SocietyCard({ societyID, societyName, membersCount, societyDescription }) {
+    return (
+        <>     
+        <Card
+            elevation={0}
+            sx={{
+                mb: 2,
+                backgroundColor: 'transparent',
+                borderRadius: 4,
+                boxShadow: 'none',
+                width: '80%',
+                height: '150px',
+                mx: 'auto',
+                border: '2px solid #7777774d'
+            }}
+        >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Avatar
+                        src="https://cdn-icons-png.flaticon.com/512/2492/2492986.png"
+                        alt="Society Icon"
+                        sx={{ width: 56, height: 56 }}
+                    />
+                    <Box>
+                        <Typography variant='h5'>
+                            <b>{societyName}</b>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {membersCount} Members
+                        </Typography>
+                    </Box>
+                </Box>
+                <RedirectButton text={"Join society"} link={`societies/${societyID}`}> </RedirectButton>
+            </Box>
+
+            <Box sx={{ px: 2, pb: 2 }}>
+                <Typography>
+                    {societyDescription}
+                </Typography>
+            </Box>
+        </Card>
+        </>
+    );
 }

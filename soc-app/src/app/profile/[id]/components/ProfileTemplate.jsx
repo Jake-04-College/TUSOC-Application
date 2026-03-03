@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Avatar, Box, Button, Card, CardContent, Container, Stack, Typography } from "@mui/material";
-import MediaCard from "../../../components/MediaCard";
+import { MediaCard } from "../../../components/cards/cards.jsx";
 
 export default function ProfileClient({ userData, posts, session }) {
   const router = useRouter();
