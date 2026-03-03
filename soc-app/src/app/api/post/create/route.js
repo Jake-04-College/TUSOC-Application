@@ -17,6 +17,7 @@ export async function POST(req) {
     const postBody = String(body.body || "").trim();
     const societyId = String(body.societyId || "").trim();
     const societyName = String(body.societyName || "").trim();
+    const imageUrl = String(body.imageUrl || "").trim();
 
     if (!title) {
         return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -51,7 +52,7 @@ export async function POST(req) {
         body: postBody,
         societyID: societyId,
         societyName,
-        image: "",
+        image: imageUrl,
         likes: 0,
         comments: 0,
         profilePic: session.user.image || "",

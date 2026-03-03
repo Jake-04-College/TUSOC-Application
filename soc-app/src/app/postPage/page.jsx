@@ -24,6 +24,7 @@ export default function PostPage() {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [formError, setFormError] = React.useState("");
     const [formSuccess, setFormSuccess] = React.useState("");
+    const [selectedImage, setSelectedImage] = React.useState(null);
 
     React.useEffect(() => {
         if (status === "unauthenticated") {
@@ -78,6 +79,25 @@ export default function PostPage() {
 
         setIsSubmitting(true);
         try {
+            let imageUrl = "";
+
+            if (selectedImage) {
+                const formData = new FormData();
+                formData.append("image", selectedImage);
+
+                const imageUploadRes = await fetch("/api/cloudinary", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const imageUploadData = await imageUploadRes.json();
+                if (!imageUploadRes.ok) {
+                    throw new Error(imageUploadData?.error || "Image upload failed");
+                }
+
+                imageUrl = imageUploadData.imageUrl || "";
+            }
+
             const res = await fetch("/api/post/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -86,6 +106,7 @@ export default function PostPage() {
                     societyName: selectedSociety?.Soc_Name || "",
                     title: title.trim(),
                     body: bodyText.trim(),
+                    imageUrl,
                 }),
             });
 
@@ -97,6 +118,7 @@ export default function PostPage() {
             setFormSuccess("Post created successfully.");
             setTitle("");
             setBodyText("");
+            setSelectedImage(null);
             router.push("/home");
         } catch (error) {
             setFormError(error?.message || "Failed to create post");
@@ -185,7 +207,7 @@ export default function PostPage() {
                         </Box>
 
 
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt:3 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
                             <TextField
                                 id="outlined-basic"
                                 variant="outlined"
@@ -194,7 +216,7 @@ export default function PostPage() {
                                 onChange={(event) => setTitle(event.target.value)}
                             />
 
-                             <TextField
+                            <TextField
                                 id="outlined-multiline-static"
                                 multiline
                                 rows={6}
@@ -202,6 +224,15 @@ export default function PostPage() {
                                 value={bodyText}
                                 onChange={(event) => setBodyText(event.target.value)}
                             />
+
+                            <Box sx={{ display: "grid", gap: 1 }}>
+                                <Typography variant="subtitle2">Image (optional)</Typography>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => setSelectedImage(event.target.files?.[0] || null)}
+                                />
+                            </Box>
 
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
 
