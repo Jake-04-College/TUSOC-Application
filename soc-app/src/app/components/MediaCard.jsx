@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import Link from 'next/link';
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -43,6 +44,8 @@ function timeSincePost(value) {
 }
 
 export default function MediaCard({
+  postId,
+  _id,
   username,
   timePosted,
   title,
@@ -53,6 +56,8 @@ export default function MediaCard({
 }) {
   const likesCount = parseInt(likes, 10) || 0;
   const commentsCount = parseInt(comments, 10) || 0;
+  const resolvedPostId = postId || _id;
+  const postHref = resolvedPostId ? `/expandPost?id=${encodeURIComponent(String(resolvedPostId))}` : null;
 
   return (
     <Card
@@ -100,7 +105,15 @@ export default function MediaCard({
       </Box>
 
       <CardContent sx={{ px: 2, pt: 0.5, pb: 0.75 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>{title}</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          {postHref ? (
+            <Link href={postHref} style={{ color: 'inherit', textDecoration: 'none' }}>
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
+        </Typography>
       </CardContent>
 
       {image ? (

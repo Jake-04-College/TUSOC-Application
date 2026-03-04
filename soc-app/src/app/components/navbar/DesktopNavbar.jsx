@@ -63,7 +63,7 @@ export default function DesktopNavbar() {
                             cursor: "pointer",
                         }}
                     >
-                        {session?.user?.name}
+                        TUSOC
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: "flex" }}>

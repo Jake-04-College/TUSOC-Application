@@ -44,6 +44,8 @@ function timeSincePost(value) {
 }
 
 export default function MediaCard({
+  postId,
+  _id,
   userID,
   username,
   timePosted,
@@ -55,6 +57,8 @@ export default function MediaCard({
 }) {
   const likesCount = parseInt(likes, 10) || 0;
   const commentsCount = parseInt(comments, 10) || 0;
+  const resolvedPostId = postId || _id;
+  const postHref = resolvedPostId ? `/expandPost?id=${encodeURIComponent(String(resolvedPostId))}` : null;
 
   return (
     <Card
@@ -101,7 +105,15 @@ export default function MediaCard({
       </Box>
 
       <CardContent sx={{ px: 2, pt: 0.5, pb: 0.75 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>{title}</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          {postHref ? (
+            <Link href={postHref} style={{ color: 'inherit', textDecoration: 'none' }}>
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
+        </Typography>
       </CardContent>
 
       {image ? (
