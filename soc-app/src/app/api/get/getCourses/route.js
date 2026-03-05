@@ -9,7 +9,7 @@ export async function GET(res) {
         const db = client.db(DB_NAME);
         const collection = db.collection(DB_COLLECTION);
 
-        // Find any documents in the databse which which have the courses status as "active", 
+        // Find any documents in the database that have the course status as "active", 
         // return the CourseName and CourseCode
         const findResults = (await collection.find({status : "active"}).toArray()).map(course => ({
             courseName: course.course_name,

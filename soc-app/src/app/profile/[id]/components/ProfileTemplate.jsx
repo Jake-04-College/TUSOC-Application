@@ -35,6 +35,7 @@ export default function ProfileClient({ userData, posts, session }) {
           posts.map((post) => (
             <MediaCard
               key={post._id}
+              postId={post._id}
               username={post.username}
               timePosted={post.timePosted}
               title={post.title}

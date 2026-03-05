@@ -1,19 +1,76 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
+import "server-only";
+export const runtime = "nodejs";
 
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { notFound } from "next/navigation";
+import clientPromise from "../../lib/mongoConnection";
+import { ObjectId } from "mongodb";
 
-export default function ExpandPostPage() {
-    const imageUrl =
-        'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Container from "@mui/material/Container";
+
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+
+function timeSincePost(value) {
+    const postTime =
+        value instanceof Date ? value.getTime() : new Date(value).getTime();
+
+    if (Number.isNaN(postTime)) return "just now";
+
+    const secondsElapsed = Math.max(
+        0,
+        Math.floor((Date.now() - postTime) / 1000)
+    );
+
+    const intervals = [
+        { label: "year", seconds: 31536000 },
+        { label: "month", seconds: 2592000 },
+        { label: "day", seconds: 86400 },
+        { label: "hour", seconds: 3600 },
+        { label: "minute", seconds: 60 },
+    ];
+
+    for (const interval of intervals) {
+        const count = Math.floor(secondsElapsed / interval.seconds);
+        if (count >= 1) {
+            return `${count} ${interval.label}${count === 1 ? "" : "s"} ago`;
+        }
+    }
+
+    return "just now";
+}
+
+export default async function ExpandPostPage({ searchParams }) {
+    const resolvedSearchParams = await searchParams;
+    const postId = String(resolvedSearchParams?.id || "").trim();
+
+    if (!postId || !ObjectId.isValid(postId)) {
+        notFound();
+    }
+
+    const client = await clientPromise;
+    const db = client.db(process.env.MONGODB_DB_NAME);
+
+    const post = await db.collection("UserPosts").findOne({ _id: new ObjectId(postId) });
+
+    if (!post) {
+        notFound();
+    }
+
+    const likesCount = parseInt(post.likes, 10) || 0;
+    const commentsCount = parseInt(post.comments, 10) || 0;
+    const title = post.title || "Untitled Post";
+    const body = post.body || "";
+    const username = post.username || "Anonymous";
+    const profilePic = post.profilePic || "";
+    const image = post.image || "";
 
     return (
         <Container maxWidth="lg">
@@ -46,68 +103,68 @@ export default function ExpandPostPage() {
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', height: "100%" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", height: "100%" }}>
                     <Card
                         elevation={0}
                         sx={{
-                            width: '100%',
+                            width: "100%",
                             maxWidth: 820,
-                            backgroundColor: 'transparent',
-                            boxShadow: 'none',
+                            backgroundColor: "transparent",
+                            boxShadow: "none",
                         }}
                     >
                         <Box
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
+                                display: "flex",
+                                alignItems: "center",
                                 gap: 1,
                                 px: 2,
                                 pt: 2,
                             }}
                         >
-                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#0079d3' }}>
-                                T
+                            <Avatar src={profilePic} sx={{ width: 36, height: 36, bgcolor: "#0079d3" }}>
+                                {!profilePic && username?.charAt(0)?.toUpperCase()}
                             </Avatar>
-                            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, flexWrap: 'wrap' }}>
+                            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, flexWrap: "wrap" }}>
                                 <Typography
                                     variant="subtitle2"
                                     component="span"
-                                    sx={{ fontWeight: 600, fontSize: '0.9rem' }}
+                                    sx={{ fontWeight: 600, fontSize: "0.9rem" }}
                                 >
-                                    example user
+                                    {username}
                                 </Typography>
                                 <Typography
                                     variant="caption"
                                     component="span"
-                                    sx={{ color: '#818384', fontSize: '0.75rem' }}
+                                    sx={{ color: "#818384", fontSize: "0.75rem" }}
                                 >
-                                    • 35 minutes ago
+                                    • {timeSincePost(post.timePosted)}
                                 </Typography>
                             </Box>
                         </Box>
 
                         <CardContent sx={{ px: 2, pt: 1, pb: 1 }}>
                             <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-                                Example of how a post would look
+                                {title}
                             </Typography>
-                            <Typography variant="body1" sx={{ color: '#1c1c1c', lineHeight: 1.6 }}>
-                                this point looks so cool wowee
+                            <Typography variant="body1" sx={{ color: "#1c1c1c", lineHeight: 1.6 }}>
+                                {body}
                             </Typography>
                         </CardContent>
 
-                        {imageUrl ? (
+                        {image ? (
                             <Box sx={{ px: 2, pb: 2 }}>
                                 <Box
                                     component="img"
-                                    src={imageUrl}
-                                    alt="Post image"
+                                    src={image}
+                                    alt={title}
                                     sx={{
-                                        width: '100%',
+                                        width: "100%",
                                         maxHeight: 460,
-                                        objectFit: 'cover',
+                                        objectFit: "cover",
                                         borderRadius: 1,
-                                        display: 'block',
-                                        backgroundColor: 'rgba(0,0,0,0.02)',
+                                        display: "block",
+                                        backgroundColor: "rgba(0,0,0,0.02)",
                                     }}
                                 />
                             </Box>
@@ -115,21 +172,21 @@ export default function ExpandPostPage() {
 
                         <CardActions
                             sx={{
-                                display: 'flex',
+                                display: "flex",
                                 gap: 0.5,
                                 px: 1.5,
                                 py: 0.5,
-                                borderTop: '1px solid #e0e0e0',
+                                borderTop: "1px solid #e0e0e0",
                             }}
                         >
-                            <IconButton size="small" sx={{ color: '#818384' }}>
-                                <ThumbUpIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
-                                <Typography variant="caption">128</Typography>
+                            <IconButton size="small" sx={{ color: "#818384" }}>
+                                <ThumbUpIcon sx={{ fontSize: "1.2rem", mr: 0.5 }} />
+                                <Typography variant="caption">{likesCount}</Typography>
                             </IconButton>
 
-                            <IconButton size="small" sx={{ color: '#818384' }}>
-                                <ChatBubbleOutlineIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
-                                <Typography variant="caption">24</Typography>
+                            <IconButton size="small" sx={{ color: "#818384" }}>
+                                <ChatBubbleOutlineIcon sx={{ fontSize: "1.2rem", mr: 0.5 }} />
+                                <Typography variant="caption">{commentsCount}</Typography>
                             </IconButton>
                         </CardActions>
 
@@ -139,7 +196,7 @@ export default function ExpandPostPage() {
                             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                                 Comments
                             </Typography>
-                            <Typography variant="body2" sx={{ color: '#6b6b6b' }}>
+                            <Typography variant="body2" sx={{ color: "#6b6b6b" }}>
                                 Comments will appear here.
                             </Typography>
                         </Box>
