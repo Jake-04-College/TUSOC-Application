@@ -22,6 +22,7 @@ const MODERATION_KEYWORDS = [
     "weapon",
     "firearm",
     "public safety",
+    "drugs",
 ];
 
 let moderationClient;

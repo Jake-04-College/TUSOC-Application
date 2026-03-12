@@ -135,7 +135,7 @@ export function MediaCard({ userID, username, timePosted, title, likes, comments
   );
 }
 
-export function SocietyCard({ societyID, societyName, membersCount, societyDescription }) {
+export function SocietyCard({ societyID, societyName, membersCount, societyDescription, societyLogo }) {
     return (
         <>     
         <Card
@@ -154,13 +154,13 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Avatar
-                        src="https://cdn-icons-png.flaticon.com/512/2492/2492986.png"
+                        src= {societyLogo}
                         alt="Society Icon"
                         sx={{ width: 56, height: 56 }}
                     />
                     <Box>
                         <Typography variant='h5'>
-                            <b>{societyName}</b>
+                            <Link href={`societies/${societyID}`}><b>{societyName}</b></Link>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {membersCount} Members
