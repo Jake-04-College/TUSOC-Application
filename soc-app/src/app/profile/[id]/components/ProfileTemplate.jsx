@@ -17,9 +17,11 @@ export default function ProfileClient({ userData, posts, session }) {
 
             <Typography color="text.secondary">{userData.courseCode ?? ""}</Typography>
 
-            <Button variant="contained" onClick={() => router.push("/editProfile")}>
-              Edit Profile
-            </Button>
+            {session?.user?.id === userData.id && (
+              <Button variant="contained" onClick={() => router.push("/editProfile")}>
+                Edit Profile
+              </Button>
+            )}
           </Stack>
         </CardContent>
       </Card>
