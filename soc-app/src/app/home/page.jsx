@@ -4,6 +4,7 @@ import * as React from "react";
 import { Box, Container, CssBaseline, Typography } from "@mui/material";
 import NavBar from "../components/navbar/Navbar";
 import { MediaCard } from "../components/cards/cards.jsx";
+import SocietiesSidebar from "../components/sidebar/SocietiesSidebar";
 
 export default function HomePage() {
     const [posts, setPosts] = React.useState([]);
@@ -54,12 +55,7 @@ export default function HomePage() {
                             minHeight: "100vh",
                         }}
                     >
-                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                            Suggested Societies
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Coming soon.
-                        </Typography>
+                        <SocietiesSidebar />
                     </Box>
 
                       

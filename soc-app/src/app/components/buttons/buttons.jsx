@@ -37,14 +37,18 @@ export function LogoutButton() {
     );
 }
 
-export function RedirectButton({ text, link }) {
+export function RedirectButton({ text, link, onClick }) {
     const router = useRouter();
 
     return (
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
-            onClick={() => router.push(link.startsWith("/") ? link : `/${link}`)}
+            onClick={(e) => {
+                onClick?.(e);
+                if (e.defaultPrevented) return;
+                router.push(link.startsWith("/") ? link : `/${link}`);
+            }}
 
         >
             {text}

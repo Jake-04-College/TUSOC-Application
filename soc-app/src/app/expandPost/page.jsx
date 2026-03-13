@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 import { notFound } from "next/navigation";
 import clientPromise from "../../lib/mongoConnection";
 import { ObjectId } from "mongodb";
+import Link from "next/link";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -17,6 +18,8 @@ import Container from "@mui/material/Container";
 
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import Navbar from "../components/navbar/Navbar";
+import SocietiesSidebar from "../components/sidebar/SocietiesSidebar";
 
 function timeSincePost(value) {
     const postTime =
@@ -69,12 +72,15 @@ export default async function ExpandPostPage({ searchParams }) {
     const title = post.title || "Untitled Post";
     const body = post.body || "";
     const username = post.username || "Anonymous";
+    const profileIdentifier = post.userID || post.username || "";
     const profilePic = post.profilePic || "";
     const image = post.image || "";
 
     return (
-        <Container maxWidth="lg">
-            <Box
+        <>
+            <Navbar />
+            <Container maxWidth="lg">
+                <Box
                 sx={{
                     mt: 2,
                     display: "grid",
@@ -95,12 +101,7 @@ export default async function ExpandPostPage({ searchParams }) {
                         minHeight: "100%",
                     }}
                 >
-                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Suggested Societies
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Coming soon.
-                    </Typography>
+                    <SocietiesSidebar />
                 </Box>
 
                 <Box sx={{ display: "flex", justifyContent: "center", height: "100%" }}>
@@ -131,7 +132,16 @@ export default async function ExpandPostPage({ searchParams }) {
                                     component="span"
                                     sx={{ fontWeight: 600, fontSize: "0.9rem" }}
                                 >
-                                    {username}
+                                    {profileIdentifier ? (
+                                        <Link
+                                            href={`/profile/${encodeURIComponent(profileIdentifier)}`}
+                                            style={{ color: "inherit", textDecoration: "none" }}
+                                        >
+                                            {username}
+                                        </Link>
+                                    ) : (
+                                        username
+                                    )}
                                 </Typography>
                                 <Typography
                                     variant="caption"
@@ -220,7 +230,8 @@ export default async function ExpandPostPage({ searchParams }) {
                         Coming soon.
                     </Typography>
                 </Box>
-            </Box>
-        </Container>
+                </Box>
+            </Container>
+        </>
     );
 }

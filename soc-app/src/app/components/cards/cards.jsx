@@ -1,14 +1,17 @@
+import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';;
-import { RedirectButton } from "../buttons/buttons";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { useRouter } from 'next/navigation';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 
 /**
  * Returns human-readable relative time
@@ -42,18 +45,26 @@ function timeSincePost(value) {
   return 'just now';
 }
 
-export function MediaCard({ userID, username, timePosted, title, likes, comments, profilePic, image}) {
+export function MediaCard({ postId, _id, userID, username, timePosted, title, likes, comments, profilePic, image}) {
+  const router = useRouter();
+  const id = postId || _id;
+  const profileTarget = userID || username;
   const likesCount = parseInt(likes, 10) || 0;
   const commentsCount = parseInt(comments, 10) || 0;
 
   return (
     <Card
       elevation={0}
+      onClick={() => id && router.push(`/viewpost/${id}`)}
       sx={{
         mb: 2,
-
         backgroundColor: 'transparent',
         boxShadow: 'none',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease',
+        '&:hover': {
+          backgroundColor: 'rgba(0, 0, 0, 0.06)',
+        },
       }}
     >
       <Box
@@ -78,7 +89,17 @@ export function MediaCard({ userID, username, timePosted, title, likes, comments
             component="span"
             sx={{ fontWeight: 600, fontSize: '0.875rem' }}
           >
-            <Link href={`/profile/${userID}`}>{username}</Link>
+            {profileTarget ? (
+              <Link
+                href={`/profile/${encodeURIComponent(profileTarget)}`}
+                onClick={(e) => e.stopPropagation()}
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                {username}
+              </Link>
+            ) : (
+              username
+            )}
           </Typography>
           <Typography
             variant="caption"
@@ -121,12 +142,12 @@ export function MediaCard({ userID, username, timePosted, title, likes, comments
           borderTop: '1px solid #e0e0e0',
         }}
       >
-        <IconButton size="small" sx={{ color: '#818384' }}>
+        <IconButton size="small" sx={{ color: '#818384' }} onClick={(e) => e.stopPropagation()}>
           <ThumbUpIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
           <Typography variant="caption">{likesCount}</Typography>
         </IconButton>
 
-        <IconButton size="small" sx={{ color: '#818384' }}>
+        <IconButton size="small" sx={{ color: '#818384' }} onClick={(e) => e.stopPropagation()}>
           <ChatBubbleOutlineIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
           <Typography variant="caption">{commentsCount}</Typography>
         </IconButton>
@@ -136,10 +157,40 @@ export function MediaCard({ userID, username, timePosted, title, likes, comments
 }
 
 export function SocietyCard({ societyID, societyName, membersCount, societyDescription }) {
+    const router = useRouter();
+  const [isJoining, setIsJoining] = React.useState(false);
+
+  async function handleJoin(e) {
+    e.stopPropagation();
+    if (isJoining) return;
+
+    setIsJoining(true);
+    try {
+      const res = await fetch('/api/post/joinSociety', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ societyId: String(societyID || '') }),
+      });
+
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload?.error || 'Failed to join society');
+      }
+
+      router.push(`/societies/${societyID}`);
+    } catch (error) {
+      console.error('Join society failed', error);
+      alert(error.message || 'Could not join society. Please try again.');
+    } finally {
+      setIsJoining(false);
+    }
+  }
+
     return (
         <>     
         <Card
             elevation={0}
+            onClick={() => router.push(`/societies/${societyID}`)}
             sx={{
                 mb: 2,
                 backgroundColor: 'transparent',
@@ -148,7 +199,12 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                 width: '80%',
                 height: '150px',
                 mx: 'auto',
-                border: '2px solid #7777774d'
+                border: '2px solid #7777774d',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease',
+                '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.06)',
+                },
             }}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
@@ -167,7 +223,14 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                         </Typography>
                     </Box>
                 </Box>
-                <RedirectButton text={"Join society"} link={`societies/${societyID}`}> </RedirectButton>
+                    <Button
+                      variant="contained"
+                      endIcon={<TrendingFlatIcon />}
+                      onClick={handleJoin}
+                      disabled={isJoining}
+                    >
+                      {isJoining ? 'Joining...' : 'Join society'}
+                    </Button>
             </Box>
 
             <Box sx={{ px: 2, pb: 2 }}>
