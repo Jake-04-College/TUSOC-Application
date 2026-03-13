@@ -84,6 +84,7 @@ export default function SocietyPage() {
                             societyName={post.Soc_Name}
                             membersCount={post.Member_Count}
                             societyDescription={post.Soc_Desc}
+                            societyLogo={post.Soc_Logo}
                             
                             />
                         ))}
