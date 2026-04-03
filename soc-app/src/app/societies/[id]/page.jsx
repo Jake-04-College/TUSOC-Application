@@ -30,6 +30,30 @@ export default async function SocietyPage({ params }) {
   const society = await db.collection("SocietyInformation").findOne(query);
   if (!society) notFound();
 
+
+  let isMember = false;
+
+  if (session?.user) {
+    const sessionUserId = String(session.user.id || "").trim();
+
+    let userQuery = null;
+
+    if (ObjectId.isValid(sessionUserId)) {
+      userQuery = { _id: new ObjectId(sessionUserId) };
+    } 
+
+    if (userQuery) {
+      const userData = await db.collection("UserDetails").findOne(userQuery, {
+        projection: { societies: 1 },
+      });
+
+      const joinedSocieties = Array.isArray(userData?.societies) ? userData.societies : [];
+      const societyName = String(society.Soc_Name || "").trim();
+      isMember = joinedSocieties.includes(societyName);
+    }
+  }
+
+
   const safeSociety = {
     ...society,
     _id: society._id?.toString() ?? null,
@@ -51,5 +75,5 @@ export default async function SocietyPage({ params }) {
     updatedAt: toISO(p.updatedAt),
   }));
 
-  return <SocietyTemplate society={safeSociety} posts={safePosts} session={session} />;
+  return <SocietyTemplate society={safeSociety} posts={safePosts} session={session} isMember={isMember} />;
 }

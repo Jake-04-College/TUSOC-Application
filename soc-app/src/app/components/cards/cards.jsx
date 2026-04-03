@@ -156,7 +156,7 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
   );
 }
 
-export function SocietyCard({ societyID, societyName, membersCount, societyDescription }) {
+export function SocietyCard({ societyID, societyName, membersCount, societyDescription, societyLogo}) {
     const router = useRouter();
   const [isJoining, setIsJoining] = React.useState(false);
 
@@ -210,7 +210,7 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Avatar
-                        src="https://cdn-icons-png.flaticon.com/512/2492/2492986.png"
+                        src={societyLogo}
                         alt="Society Icon"
                         sx={{ width: 56, height: 56 }}
                     />
