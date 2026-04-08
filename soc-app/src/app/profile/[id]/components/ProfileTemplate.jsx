@@ -56,6 +56,7 @@ export default function ProfileClient({ userData, posts, session }) {
                 title={post.title}
                 image={post.image}
                 likes={post.likes}
+                likedBy={post.likedBy}
                 comments={post.comments}
                 profilePic={post.profilePic}
               />

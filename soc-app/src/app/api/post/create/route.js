@@ -143,7 +143,9 @@ export async function POST(req) {
         societyID: societyId,
         societyName,
         image: imageUrl,
+        // Like state starts empty for every new post.
         likes: 0,
+        likedBy: [],
         comments: 0,
         profilePic: session.user.image || "",
         timePosted: new Date(),

@@ -12,6 +12,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useRouter } from 'next/navigation';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import { useSession } from 'next-auth/react';
 
 /**
  * Returns human-readable relative time
@@ -45,12 +46,60 @@ function timeSincePost(value) {
   return 'just now';
 }
 
-export function MediaCard({ postId, _id, userID, username, timePosted, title, likes, comments, profilePic, image}) {
+export function MediaCard({ postId, _id, userID, username, timePosted, title, likes, comments, profilePic, image, likedBy }) {
   const router = useRouter();
+  const { data: session } = useSession();
   const id = postId || _id;
   const profileTarget = userID || username;
-  const likesCount = parseInt(likes, 10) || 0;
-  const commentsCount = parseInt(comments, 10) || 0;
+  const currentUserId = String(session?.user?.id || '');
+  const [likesCount, setLikesCount] = React.useState(Math.max(0, parseInt(likes, 10) || 0));
+  const [isLiked, setIsLiked] = React.useState(
+    Array.isArray(likedBy) && currentUserId
+      ? likedBy.map((value) => String(value)).includes(currentUserId)
+      : false
+  );
+  const [isLoadingLike, setIsLoadingLike] = React.useState(false);
+  const commentsCount = Math.max(0, parseInt(comments, 10) || 0);
+
+  React.useEffect(() => {
+  
+    setLikesCount(Math.max(0, parseInt(likes, 10) || 0));
+    setIsLiked(
+      Array.isArray(likedBy) && currentUserId
+        ? likedBy.map((value) => String(value)).includes(currentUserId)
+        : false
+    );
+  }, [likes, likedBy, currentUserId]);
+
+  async function handleLikeClick(e) {
+    e.stopPropagation();
+
+    if (!id || !currentUserId || isLoadingLike) return;
+    setIsLoadingLike(true);
+
+    try {
+      //Back end likes the post 
+      const res = await fetch('/api/post/toggleLike', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: String(id) }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(payload?.error || 'Failed to toggle like');
+      }
+
+      //uses the db to reflect the number of post 
+      setIsLiked(!!payload?.isLiked);
+      setLikesCount(Math.max(0, parseInt(payload?.likes, 10) || 0));
+    } catch (error) {
+      console.error('Toggle like failed', error);
+    } finally {
+      setIsLoadingLike(false);
+    }
+  }
 
   return (
     <Card
@@ -142,7 +191,12 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
           borderTop: '1px solid #e0e0e0',
         }}
       >
-        <IconButton size="small" sx={{ color: '#818384' }} onClick={(e) => e.stopPropagation()}>
+        <IconButton
+          size="small"
+          sx={{ color: isLiked ? '#1976d2' : '#818384' }}
+          onClick={handleLikeClick}
+          disabled={!currentUserId || isLoadingLike || isLiked}
+        >
           <ThumbUpIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
           <Typography variant="caption">{likesCount}</Typography>
         </IconButton>

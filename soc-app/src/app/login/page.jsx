@@ -43,8 +43,13 @@ export default function LoginPage() {
 
         if (result?.ok) {
             console.log("login is valid!");
+<<<<<<< Updated upstream
             router.push("/home");
             router.refresh();
+=======
+            console.log("User found:", data);
+            router.push("/home");
+>>>>>>> Stashed changes
 
         } else {
             console.log("not valid");
@@ -78,10 +83,29 @@ export default function LoginPage() {
                 <Toolbar></Toolbar>
             </AppBar>
 
+<<<<<<< Updated upstream
             <Box sx={{ minHeight: "100vh", background: "background.paper", py: 4 }}>
+=======
+            <Box
+                sx={{
+                    minHeight: "95vh",
+                    background: "linear-gradient(135deg, #1b3a7a 0%, #2a68b9 45%, #5aa3e8 100%)",
+                    py: { xs: 3, sm: 4 },
+                }}  
+            >
+>>>>>>> Stashed changes
             <Container maxWidth="sm">
-                <Box sx={{ height: "100%", mt: 2 }}>
-                    <Box sx={{ p: 1, borderRadius: 2, boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.68)", backgroundColor: "background.paper", height: "700" }}>
+                <Box sx={{ height: "100%", mt: { xs: 1, sm: 2 } }}>
+                    <Box
+                        sx={{
+                            p: { xs: 2.5, sm: 3.5 },
+                            borderRadius: 3,
+                            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.35)",
+                            backgroundColor: "rgba(255, 255, 255, 0.95)",
+                            backdropFilter: "blur(6px)",
+                            border: "1px solid rgba(255, 255, 255, 0.6)",
+                        }}
+                    >
                         <Box component="form" onSubmit={handleSubmit} noValidate>
                             <Box sx={{ mb: 1, pl: 0.5 }}>
                                 <Typography variant="h3" sx={{ fontWeight: 800, textAlign: "left" }}>
@@ -97,6 +121,7 @@ export default function LoginPage() {
                             fullWidth
                             label="Email"
                             name="email"
+                            autoComplete="email"
                         />
 
                         <FormControl margin="normal" fullWidth>
@@ -106,6 +131,8 @@ export default function LoginPage() {
                                 name="pass"
                                 label="Password"
                                 type={showPassword ? "text" : "password"}
+                                name="pass"
+                                autoComplete="current-password"
 
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -126,13 +153,17 @@ export default function LoginPage() {
                             <SubmitButton text={"Login"} fullWidth />
                         </Box>
 
+<<<<<<< Updated upstream
                         <Box sx={{ mt: 3 }}>
                             <SSOLoginButton />
                         </Box>
 
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 23, mt: 2, fontSize: "0.9rem", pt: 25 }}>
+=======
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 21, mt: 2, fontSize: "0.9rem", pt: 25 }}>
+>>>>>>> Stashed changes
                             <Box sx={{ display: "flex", alignItems: "center", gap: 0.2       }}>
-                                <span>Don't have an account? </span>
+                                <span>Don't have an account?</span>
                                 <MuiLink
                                     component={Link}
                                     href="/register"
