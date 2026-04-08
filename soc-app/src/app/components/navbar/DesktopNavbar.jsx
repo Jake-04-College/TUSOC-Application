@@ -15,13 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRouter } from "next/navigation";
 import { buildDesktopNavBarItems, buildDesktopSettingsMenuItems } from "./config/navConfig";
-import { useSession } from "next-auth/react";
 import { LoginButton, LogoutButton } from "../buttons/buttons";
 
-export default function DesktopNavbar() {
-    const { data: session, status } = useSession();
-    const isLoggedIn = !!session;
+export default function DesktopNavbar({ session, status, isLoggedIn }) {
     const isManager = null;
+    const avatarSrc = session?.user?.profilePic || session?.user?.image || undefined;
+    const avatarFallback = session?.user?.username?.charAt(0)?.toUpperCase() || session?.user?.name?.charAt(0)?.toUpperCase() || "U";
 
     const router = useRouter();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -32,8 +31,13 @@ export default function DesktopNavbar() {
     );
 
     const settings = React.useMemo(
-        () => buildDesktopSettingsMenuItems({ isLoggedIn, isManager, webView: true }),
-        [isLoggedIn, isManager]
+        () => buildDesktopSettingsMenuItems({
+            isLoggedIn,
+            isManager,
+            webView: true,
+            userID: session?.user?.id,
+        }),
+        [isLoggedIn, isManager, session?.user?.id]
     );
 
     const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
@@ -91,7 +95,7 @@ export default function DesktopNavbar() {
                                     aria-controls="menu-user"
                                     aria-haspopup="true"
                                 >
-                                    <Avatar src={session?.user?.image || undefined}/>
+                                    <Avatar src={avatarSrc}>{!avatarSrc ? avatarFallback : null}</Avatar>
                                 </IconButton>
                             </Tooltip>
 

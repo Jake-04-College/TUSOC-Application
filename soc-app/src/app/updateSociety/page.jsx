@@ -4,32 +4,33 @@ import * as React from "react";
 import { Avatar, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import {useRouter} from "next/navigation";
 
-export default function EditProfile(){
-    {/* change to pull user info */}
+export default function EditSociety(){
+    {/* change to pull soc info */}
     const [formData, setFormData] = React.useState({
-        username: "",
-        pronouns: "",
-        bio: "",
-        avatar: ""
+        socName: "",
+        description: "",
+        banner: "",
+        icon: ""
     });
 
     const router = useRouter();
 
-    function changeProfile(e){
+    function changeSociety(e){
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     }
 
-    async function saveProfile(){
-        await fetch("/api/updateProfile", {
+    async function saveSociety(){
+        {/*change to correct api directory plus add api*/}
+        await fetch("/api/updateSociety", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(formData)
         });
 
-        router.push("/userProfile");
+        router.push("/societies");
     }
 
     return (
@@ -42,39 +43,39 @@ export default function EditProfile(){
                 <Avatar src={formData.avatar} sx={{ width: 100, height: 100, mx: "auto" }}/>
 
                 <TextField
-                    label="Username"
-                    name="username"
-                    value={formData.username}
-                    onChange={changeProfile}
+                    label="Society Name"
+                    name="socName"
+                    value={formData.socName}
+                    onChange={changeSociety}
                     fullWidth
                 />
 
                 <TextField
-                    label="Pronouns"
-                    name="pronouns"
-                    value={formData.pronouns}
-                    onChange={changeProfile}
+                    label="Description"
+                    name="description"
+                    value={formData.description}
+                    onChange={changeSociety}
+                    multiline
+                    rows={4}
                     fullWidth
                 />
 
                 {/* change to upload file*/}
                 {
                 <TextField
-                    label="Avatar URL"
-                    name="avatar"
-                    value={formData.avatar}
-                    onChange={changeProfile}
+                    label="Banner URL"
+                    name="banner"
+                    value={formData.banner}
+                    onChange={changeSociety}
                     fullWidth
                 />
                 }
 
                 <TextField
-                    label="Bio"
-                    name="bio"
-                    value={formData.bio}
-                    onChange={changeProfile}
-                    multiline
-                    rows={4}
+                    label="Icon URL"
+                    name="icon"
+                    value={formData.icon}
+                    onChange={changeSociety}
                     fullWidth
                 />
                 
@@ -82,7 +83,7 @@ export default function EditProfile(){
                     <Button variant="outlined" fullWidth onClick={() => router.back()}>
                         Cancel
                     </Button>
-                    <Button variant="contained" fullWidth onClick={saveProfile}>
+                    <Button variant="contained" fullWidth onClick={saveSociety}>
                         Save Changes
                     </Button>
                 </Stack>

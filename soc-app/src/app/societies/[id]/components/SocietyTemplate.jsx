@@ -1,18 +1,52 @@
 "use client";
 
-import {Avatar, Box, Button,  Card, CardContent, Container, CssBaseline, Typography} from "@mui/material";
-import Navbar from "../../../components/navbar/Navbar"
+import * as React from "react";
+import { Avatar, Box, Button, Card, CardContent, Container, CssBaseline, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import Navbar from "../../../components/navbar/Navbar";
+import { MediaCard } from "../../../components/cards/cards.jsx";
 
-export default function SocietyTemplate({ society, posts }) {
+export default function SocietyTemplate({ society, posts, session, isMember: hasJoined }) {
+    const router = useRouter();
+    const [isMember, setIsMember] = React.useState(!!hasJoined);
+    const [isJoining, setIsJoining] = React.useState(false);
     const bannerUrl = society?.Soc_Banner;
     const iconUrl = society?.Soc_Logo || "";
     const name = society?.Soc_Name || "Society";
 
+    async function handleJoin() {
+        if (!session?.user) {
+            router.push("/login");
+            return;
+        }
+
+
+        setIsJoining(true);
+
+        try {
+            const response = await fetch("/api/post/joinSociety", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ societyId: String(society?._id || "") }),
+            });
+
+            const payload = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                setJoinError(payload?.error || "Failed to join society.");
+                return;
+            }
+
+            setIsMember(true);
+        } finally {
+            setIsJoining(false);
+        }
+    }
 
     return (
         <>
             <CssBaseline />
-            <Navbar /> 
+            <Navbar />
 
             <Box sx={{ position: "relative", width: "100%", height: 220, mb: 12 }}>
                 <Box
@@ -111,17 +145,28 @@ export default function SocietyTemplate({ society, posts }) {
                                     </Typography>
                                 </Box>
 
-                                <Button
-                                    variant="outlined"
-                                    fullWidth
-                                    sx={{
-                                        bgcolor: "#1976d2",
-                                        color: "white",
-                                        "&:hover": { bgcolor: "#1565c0" },
-                                    }}
-                                >
-                                    Events
-                                </Button>
+                                {hasJoined ? (
+                                    <Button
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{
+                                            bgcolor: "#1976d2",
+                                            color: "white",
+                                            "&:hover": { bgcolor: "#1565c0" },
+                                        }}
+                                    >
+                                        Events
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={handleJoin}
+                                        disabled={isJoining}
+                                    >
+                                        {isJoining ? "Joining..." : "Join Society"}
+                                    </Button>
+                                )}
                             </CardContent>
                         </Card>
                     </Box>

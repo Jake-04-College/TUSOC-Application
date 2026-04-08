@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 
 
 export default function Navbar({ isManager = false }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const isLoggedIn = !!session;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -22,7 +22,7 @@ export default function Navbar({ isManager = false }) {
   return (
     <>
       {isDesktop ? (
-        <DesktopNavbar />
+        <DesktopNavbar session={session} status={status} isLoggedIn={isLoggedIn} />
       ) : (
         <MobileNavbar isLoggedIn={isLoggedIn} isManager={isManager} />
       )}

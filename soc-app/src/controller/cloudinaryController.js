@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import cloudinary from "../lib/cloudinaryConnection";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 10000000 // 10MB;
 const DEFAULT_FOLDER = "soc-app";
 
 export async function uploadImageController(req, { Folder }) {
     try {
         const formData = await req.formData();
         const file = formData.get("image");
-        const folder = Folder || DEFAULT_FOLDER;
+        const requestedFolder = String(formData.get("folder") || "").trim();
+        const folder = requestedFolder || Folder || DEFAULT_FOLDER;
 
         if (!(file instanceof File)) {
             return NextResponse.json({ error: "No image file provided" }, { status: 400 });

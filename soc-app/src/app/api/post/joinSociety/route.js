@@ -55,9 +55,14 @@ export async function POST(req) {
         }
 
         // Add the society name to the user's societies array.
-        // $addToSet prevents duplicates.
+        // $ne prevents duplicates by checking if the society is already in the array before adding.
+        const joinFilter = {
+            ...userFilter,
+            societies: { $ne: societyName },
+        };
+
         const result = await db.collection("UserDetails").updateOne(
-            userFilter,
+            joinFilter,
             {
                 $addToSet: { societies: societyName },
                 $currentDate: { updatedAt: true },
@@ -65,12 +70,34 @@ export async function POST(req) {
         );
 
         if (!result.matchedCount) {
-            return jsonError("User profile not found. Complete onboarding first.", 404);
+            const existingUser = await db.collection("UserDetails").findOne(userFilter, {
+                projection: { _id: 1, societies: 1 },
+            });
+
+            if (!existingUser) {
+                return jsonError("User profile not found. Complete onboarding first.", 404);
+            }
+
+            return NextResponse.json({
+                ok: true,
+                joined: false,
+                alreadyJoined: true,
+                societyId,
+                societyName,
+            });
         }
+
+        await db.collection("SocietyInformation").updateOne(
+            { _id: new ObjectId(societyId) },
+            {
+                $inc: { Member_Count: 1 },
+                $currentDate: { updatedAt: true },
+            }
+        );
 
         return NextResponse.json({
             ok: true,
-            joined: result.modifiedCount > 0,
+            joined: true,
             societyId,
             societyName,
         });

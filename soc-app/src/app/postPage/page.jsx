@@ -94,7 +94,7 @@ export default function PostPage() {
                 imageUrl = imageUploadData.imageUrl || "";
             }
 
-            const res = await fetch("/api/post/create", {
+            const res = await fetch("/api/post/createPost", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
