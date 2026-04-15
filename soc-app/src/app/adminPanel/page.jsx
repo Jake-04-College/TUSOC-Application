@@ -24,7 +24,7 @@ export default function AdminPanel() {
                     setStudents(data);
                 }
                 else if (view === "societies"){
-                    const res = await fetch(""); // add get societies api
+                    const res = await fetch("../../api/get/getSocieties");
                     const data = await res.json();
                     setSocieties(data);
                 }
