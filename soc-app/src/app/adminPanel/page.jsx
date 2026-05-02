@@ -105,17 +105,27 @@ export default function AdminPanel() {
                         <Box>
                             <Typography variant="h6">Students</Typography>
                             {students.map((s) => (
-                                <Box key={s.id} display="flex" justifyContent="space-between" mb={1}>
-                                    <Typography>
-                                        {s.name} ({s.email})
-                                    </Typography>
-
-                                    <Button variant="outlined" onClick={() => {
-                                        setEditItem(s);
-                                        setOpenDialog(true);
-                                    }}>
-                                        Edit
-                                    </Button>
+                                <Box key={s.id} mb={1}>
+                                    <Grid container alignItems="center" spacing={2}>
+                                        <Grid item xs={3}>
+                                            <Typography>{s.username}</Typography>
+                                        </Grid>
+                                        <Grid  item xs={3}>
+                                            <Typography>{s.email}</Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography>{s.phoneNum}</Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button variant="outlined" 
+                                            onClick={() => {
+                                                setEditItem(s);
+                                                setOpenDialog(true)
+                                            }}>
+                                                Edit
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </Box>
                             ))}
                         </Box>
@@ -125,15 +135,22 @@ export default function AdminPanel() {
                         <Box>
                             <Typography variant="h6">Societies</Typography>
                             {societies.map((s) => (
-                                <Box key={s.id} display="flex" justifyContent="space-between" mb={1}>
-                                    <Typography>{s.name}</Typography>
-
-                                    <Button variant="outlined" onClick={() => {
-                                        setEditItem(s);
-                                        setOpenDialog(true);
-                                    }}>
-                                        Edit
-                                    </Button>
+                                <Box key={s.id}  mb={1}>
+                                    <Grid item xs={3}>
+                                        <Typography>{s.socName}</Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <Typography>{s.socOwner}</Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <Button variant="outlined" 
+                                        onClick={() => {
+                                            setEditItem(s);
+                                            setOpenDialog(true);
+                                        }}>
+                                            Edit
+                                        </Button>
+                                    </Grid>
                                 </Box>
                             ))}
                         </Box>
