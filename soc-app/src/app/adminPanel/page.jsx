@@ -232,7 +232,11 @@ export default function AdminPanel(){
                                                         variant="outlined"
                                                         color="error"
                                                         size="small"
-                                                        onClick={() => handleDelete(s)}
+                                                        onClick={() => {
+                                                            if (confirm("Are you sure you want to delete this item?")){
+                                                                handleDelete(s);
+                                                            }
+                                                        }}
                                                     >
                                                         Delete
                                                     </Button>
@@ -281,7 +285,11 @@ export default function AdminPanel(){
                                                         variant="outlined"
                                                         color="error"
                                                         size="small"
-                                                        onClick={() => handleDelete(s)}
+                                                        onClick={() => {
+                                                            if (confirm("Are you sure you want to delete this item?")){
+                                                                handleDelete(s);
+                                                            }
+                                                        }}
                                                     >
                                                         Delete
                                                     </Button>
@@ -332,7 +340,11 @@ export default function AdminPanel(){
                                                         variant="outlined"
                                                         color="error"
                                                         size="small"
-                                                        onClick={() => handleDelete(s)}
+                                                        onClick={() => {
+                                                            if (confirm("Are you sure you want to delete this item?")){
+                                                                handleDelete(s);
+                                                            }
+                                                        }}
                                                     >
                                                         Delete
                                                     </Button>
