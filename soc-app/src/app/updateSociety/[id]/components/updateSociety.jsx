@@ -1,30 +1,37 @@
 "use client";
 
 import * as React from "react";
-import {
-    Alert,
-    Avatar,
-    Box,
-    Button,
-    Container,
-    Stack,
-    TextField,
-    Typography
-} from "@mui/material";
+import {Alert, Avatar, Box, Button, Container, Stack, TextField, Typography} from "@mui/material";
 import { useRouter } from "next/navigation";
 import NavBar from "../../../components/navbar/Navbar";
 
-export default function EditSociety({ initialData }) {
+export default function UpdateSociety({ initialData }) {
     const router = useRouter();
 
     const [formData, setFormData] = React.useState({
-        Soc_Name: initialData?.Soc_Name || "",
-        Soc_Desc: initialData?.Soc_Desc || "",
-        Soc_Campus: initialData?.Soc_Campus || "",
-        Soc_Category: initialData?.Soc_Campus || "",
-        Soc_Logo: initialData?.Soc_Logo || "",
-        Soc_Banner: initialData?.Soc_Banner || "",
+        Soc_Name: "",
+        Soc_Desc: "",
+        Soc_Campus: "",
+        Soc_Category: "",
+        Soc_Logo: "",
+        Soc_Banner: "",
     });
+
+    const [isHydrated, setIsHydrated] = React.useState(false);
+
+    React.useEffect(() => {
+        if (initialData && !isHydrated) {
+            setFormData({
+                Soc_Name: initialData.Soc_Name || "",
+                Soc_Desc: initialData.Soc_Desc || "",
+                Soc_Campus: initialData.Soc_Campus || "",
+                Soc_Category: initialData.Soc_Category || "",
+                Soc_Logo: initialData.Soc_Logo || "",
+                Soc_Banner: initialData.Soc_Banner || "",
+            });
+            setIsHydrated(true);
+        }
+    }, [initialData, isHydrated]);
 
     const [logoFile, setLogoFile] = React.useState(null);
     const [bannerFile, setBannerFile] = React.useState(null);
@@ -46,7 +53,7 @@ export default function EditSociety({ initialData }) {
 
         const preview = URL.createObjectURL(file);
 
-        if (type === "logo") {
+        if (type === "Soc_Logo") {
             setLogoFile(file);
             setLogoPreview(preview);
         } else {
@@ -141,7 +148,7 @@ export default function EditSociety({ initialData }) {
 
                     <TextField
                         label="Society Name"
-                        name="name"
+                        name="Soc_Name"
                         value={formData.Soc_Name}
                         onChange={handleChange}
                         required
@@ -150,7 +157,7 @@ export default function EditSociety({ initialData }) {
 
                     <TextField
                         label="Campus"
-                        name="campus"
+                        name="Soc_Campus"
                         value={formData.Soc_Campus}
                         onChange={handleChange}
                         fullWidth
@@ -158,7 +165,7 @@ export default function EditSociety({ initialData }) {
 
                     <TextField
                         label="Category"
-                        name="category"
+                        name="Soc_Category"
                         value={formData.Soc_Category}
                         onChange={handleChange}
                         fullWidth
@@ -166,7 +173,7 @@ export default function EditSociety({ initialData }) {
 
                     <TextField
                         label="Description"
-                        name="description"
+                        name="Soc_Desc"
                         value={formData.Soc_Desc}
                         onChange={handleChange}
                         multiline
@@ -176,12 +183,12 @@ export default function EditSociety({ initialData }) {
 
                     <Box>
                         <Typography>Logo</Typography>
-                        <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, "logo")} />
+                        <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, "Soc_Logo")} />
                     </Box>
 
                     <Box>
                         <Typography>Banner</Typography>
-                        <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, "banner")} />
+                        <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, "Soc_Banner")} />
                     </Box>
 
                     <Stack direction="row" spacing={2}>
