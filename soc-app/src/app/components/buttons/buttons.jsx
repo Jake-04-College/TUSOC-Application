@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import { useRouter } from "next/navigation";
 import SendIcon from '@mui/icons-material/Send';
+import { signIn, signOut } from "next-auth/react";
 
 export function LoginButton({ fullWidth = false, sx = {}, ...props } = {}) {
     const router = useRouter();
@@ -65,7 +66,7 @@ export function SSOLoginButton({ provider = "google", fullWidth = false, sx = {}
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
-            onClick={() => signIn(provider)}
+            onClick={() => (provider ? signIn(provider) : signIn())}
             fullWidth={fullWidth}
             sx={sx}
             {...props}
