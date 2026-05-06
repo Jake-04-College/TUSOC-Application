@@ -93,6 +93,7 @@ export default async function ExpandPostPage({ searchParams }) {
                 <Box
                     component="aside"
                     sx={{
+                        display: { xs: 'none', md: 'block' },
                         borderRight: { xs: "none", md: "1px solid rgba(0,0,0,0.12)" },
                         borderRadius: 2,
                         pr: { xs: 0, md: 2 },
@@ -216,6 +217,7 @@ export default async function ExpandPostPage({ searchParams }) {
                 <Box
                     component="aside"
                     sx={{
+                        display: { xs: 'none', md: 'block' },
                         borderLeft: { xs: "none", md: "1px solid rgba(0, 0, 0, 0.12)" },
                         borderRadius: 2,
                         pl: { xs: 0, md: 2 },
