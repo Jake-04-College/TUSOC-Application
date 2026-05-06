@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import { Box, Container, CssBaseline, Typography } from "@mui/material";
-import MediaCard from "../components/mediacard/MediaCard";
 import NavBar from "../components/navbar/Navbar";
+import { MediaCard } from "../components/cards/cards.jsx";
+import SocietiesSidebar from "../components/sidebar/SocietiesSidebar";
 
 export default function HomePage() {
     const [posts, setPosts] = React.useState([]);
@@ -46,6 +47,7 @@ export default function HomePage() {
                     <Box
                         component="aside"
                         sx={{
+                            display: { xs: "none", md: "block" },
                             borderRight: { xs: "none", md: "1px solid rgba(0,0,0,0.12)" },
                             borderRadius: 2,
                             pr: { xs: 0, md: 2 },
@@ -54,12 +56,7 @@ export default function HomePage() {
                             minHeight: "100vh",
                         }}
                     >
-                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                            Suggested Societies
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Coming soon.
-                        </Typography>
+                        <SocietiesSidebar />
                     </Box>
 
                       
@@ -83,11 +80,14 @@ export default function HomePage() {
                                 {posts.map((post) => (
                                     <MediaCard
                                         key={post._id}
+                                        postId={post._id}
+                                        userID={post.userID}
                                         username={post.username}
                                         timePosted={post.timePosted}
                                         title={post.title}
                                         image={post.image}
                                         likes={post.likes}
+                                        likedBy={post.likedBy}
                                         comments={post.comments}
                                         profilePic={post.profilePic}
                                     />
@@ -99,6 +99,7 @@ export default function HomePage() {
                     <Box
                         component="aside"
                         sx={{
+                            display: { xs: "none", md: "block" },
                             borderLeft: { xs: "none", md: "1px solid rgba(0,0,0,0.12)" },
                             borderRadius: 2,
                             pl: { xs: 0, md: 2 },

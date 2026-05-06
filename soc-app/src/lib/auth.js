@@ -36,14 +36,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 .collection("UserDetails")
                 .findOne(
                     { email: session.user.email },
-                    { projection: { username: 1, role: 1, courseCode: 1, onboarded: 1 } }
+                    { projection: { username: 1, role: 1, courseCode: 1, onboarded: 1, profilePic: 1 } }
                 );
 
             session.user.username = userData?.username ?? null;
             session.user.role = userData?.role ?? "user";
             session.user.courseCode = userData?.courseCode ?? null;
             session.user.onboarded = !!userData?.onboarded;
-            session.user.id = userData.id;
+            session.user.profilePic = userData?.profilePic ?? null;
+            
+            if (userData?._id) session.user.id = userData._id.toString();
 
             return session;
         },

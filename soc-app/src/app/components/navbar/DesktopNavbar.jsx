@@ -12,16 +12,16 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useRouter } from "next/navigation";
 import { buildDesktopNavBarItems, buildDesktopSettingsMenuItems } from "./config/navConfig";
-import { useSession } from "next-auth/react";
 import { LoginButton, LogoutButton } from "../buttons/buttons";
 
-export default function DesktopNavbar() {
-    const { data: session, status } = useSession();
-    const isLoggedIn = !!session;
+const logoUrl = "https://res.cloudinary.com/mgpimages/image/upload/v1778086813/image_2026-05-06_180013747_hzc8ue.png";
+
+export default function DesktopNavbar({ session, status, isLoggedIn }) {
     const isManager = null;
+    const avatarSrc = session?.user?.profilePic || session?.user?.image || undefined;
+    const avatarFallback = session?.user?.username?.charAt(0)?.toUpperCase() || session?.user?.name?.charAt(0)?.toUpperCase() || "U";
 
     const router = useRouter();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -32,8 +32,13 @@ export default function DesktopNavbar() {
     );
 
     const settings = React.useMemo(
-        () => buildDesktopSettingsMenuItems({ isLoggedIn, isManager, webView: true }),
-        [isLoggedIn, isManager]
+        () => buildDesktopSettingsMenuItems({
+            isLoggedIn,
+            isManager,
+            webView: true,
+            userID: session?.user?.id,
+        }),
+        [isLoggedIn, isManager, session?.user?.id]
     );
 
     const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
@@ -45,7 +50,12 @@ export default function DesktopNavbar() {
         <AppBar position="static" sx={{ display: { xs: "none", md: "block" } }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ mr: 1 }} />
+                    <Box
+                        component="img"
+                        src={logoUrl}
+                        alt="TUSOC logo"
+                        sx={{ width: 64, height: 64, mr: 1, objectFit: "contain" }}
+                    />
                     <Typography
                         variant="h6"
                         noWrap
@@ -63,7 +73,7 @@ export default function DesktopNavbar() {
                             cursor: "pointer",
                         }}
                     >
-                        {session?.user?.name}
+                        TUSOC
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -85,13 +95,18 @@ export default function DesktopNavbar() {
                     {isLoggedIn && (
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
-                                <IconButton
+                                    <IconButton
                                     onClick={handleOpenUserMenu}
                                     sx={{ p: 0 }}
                                     aria-controls="menu-user"
                                     aria-haspopup="true"
                                 >
-                                    <Avatar src={session?.user?.image || undefined}/>
+                                    <Avatar
+                                        src={avatarSrc}
+                                        alt={session?.user?.username || session?.user?.name || "User avatar"}
+                                    >
+                                        {!avatarSrc ? avatarFallback : null}
+                                    </Avatar>
                                 </IconButton>
                             </Tooltip>
 

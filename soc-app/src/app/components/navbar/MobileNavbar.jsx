@@ -4,6 +4,8 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { usePathname, useRouter } from "next/navigation";
 import { buildMobileNavBarItems } from "./config/navConfig";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { useSession } from 'next-auth/react';
 
 export default function MobileNavbar({
   isLoggedIn = true,
@@ -16,10 +18,26 @@ export default function MobileNavbar({
     if webView is false, it indicates the user is on a mobile device else user is on web browser
     Management tab is only visible to managers on a web browser */
 
-  const items = React.useMemo(
-    () => buildMobileNavBarItems({ isLoggedIn, isManager, webView: false }),
-    [isLoggedIn, isManager]
-  );
+  const { data: session } = useSession();
+
+  const items = React.useMemo(() => {
+    const base = buildMobileNavBarItems({ isLoggedIn, isManager, webView: false });
+
+    if (isLoggedIn && session?.user?.id) {
+      // add profile tab that links to the current user's profile
+      return [
+        ...base,
+        {
+          value: 'profile',
+          navName: 'Profile',
+          redirectLink: `/profile/${session.user.id}`,
+          icon: AccountBoxIcon,
+        },
+      ];
+    }
+
+    return base;
+  }, [isLoggedIn, isManager, session]);
 
   // Code responsible for handing the current active tab and updating according to user navigation.
   const activeValue = React.useMemo(() => {
@@ -33,11 +51,8 @@ export default function MobileNavbar({
   const handleChange = (_event, newValue) => {
     const target = items.find((item) => item.value === newValue)?.redirectLink;
 
-    if (target && target !== pathname) {
-      router.push(target);
-    } else {
-      router.push("/not-found");
-    }
+    if (!target || target === pathname) return;
+    router.push(target);
   };
 
   return (
@@ -60,7 +75,7 @@ export default function MobileNavbar({
           key={value}
           label={navName}
           value={value}
-          icon={<Icon />}
+          icon={Icon ? <Icon /> : null}
         />
       ))}
     </BottomNavigation>

@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { FormControl, InputLabel, OutlinedInput, TextField, Checkbox, Container, Box, AppBar, Toolbar, InputAdornment, IconButton, Link as MuiLink, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput, TextField, Container, Box, InputAdornment, IconButton, Link as MuiLink, Typography, CssBaseline } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 // Custom Imports
-import { SubmitButton } from '../components/buttons/buttons'
+import { SubmitButton, SSOLoginButton } from '../components/buttons/buttons';
+import NavBar from '../components/navbar/Navbar';
 
 
 export default function LoginPage() {
@@ -25,22 +26,28 @@ export default function LoginPage() {
     }; // end handler
 
     async function runDBCallAsync(email, pass) {
-        const res = await fetch("http://localhost:3000/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password: pass }),
+        const cleanEmail = String(email || "").trim().toLowerCase();
+        const cleanPassword = String(pass || "");
+
+        if (!cleanEmail || !cleanPassword) {
+            console.log("Email and password are required");
+            return;
+        }
+
+        const result = await signIn("credentials", {
+            email: cleanEmail,
+            password: cleanPassword,
+            redirect: false,
+            callbackUrl: "/home",
         });
 
-        const data = await res.json();
-
-        if (data.valid) {
+        if (result?.ok) {
             console.log("login is valid!");
-            console.log("User found:", data);
-
+            router.push("/home");
+            router.refresh();
         } else {
             console.log("not valid");
-            console.log("User found:", data);
-
+            console.log("Login error:", result?.error);
         }
     }
 
@@ -64,21 +71,17 @@ export default function LoginPage() {
     return (
         <>
             <CssBaseline />
+            <NavBar />
 
-            <AppBar position="static">
-                <Toolbar></Toolbar>
-            </AppBar>
-
-            <Box sx={{ minHeight: "100vh", background: "linear-gradient(180deg, #2a68b9ff 0%, #ffffff 100%)", py: 4 }}>
             <Container maxWidth="sm">
-                <Box sx={{ height: "100%", mt: 2 }}>
-                    <Box sx={{ p: 1, borderRadius: 2, boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.68)", backgroundColor: "background.paper", height: "700" }}>
+                <Box sx={{ minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "center", py: 4 }}>
+                    <Box sx={{ p: 2, borderRadius: 2, boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", backgroundColor: "background.paper" }}>
                         <Box component="form" onSubmit={handleSubmit} noValidate>
-                            <Box sx={{ mb: 1, pl: 0.5 }}>
-                                <Typography variant="h3" sx={{ fontWeight: 800, textAlign: "left" }}>
+                            <Box sx={{ mb: 2, pl: 0.5 }}>
+                                <Typography variant="h4" sx={{ fontWeight: 800, textAlign: "left" }}>
                                     Welcome Back.
                                 </Typography>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 500, textAlign: "left", mt: 0.5 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 500, textAlign: "left", mt: 0.5, color: "text.secondary" }}>
                                     Please enter your details.
                                 </Typography>
                             </Box>
@@ -88,14 +91,18 @@ export default function LoginPage() {
                             fullWidth
                             label="Email"
                             name="email"
+                            autoComplete="email"
                         />
 
                         <FormControl margin="normal" fullWidth>
                             <InputLabel>Password</InputLabel>
                             <OutlinedInput
                                 id="password"
+                                name="pass"
                                 label="Password"
                                 type={showPassword ? "text" : "password"}
+                                name="pass"
+                                autoComplete="current-password"
 
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -116,9 +123,13 @@ export default function LoginPage() {
                             <SubmitButton text={"Login"} fullWidth />
                         </Box>
 
+                        <Box sx={{ mt: 3 }}>
+                            <SSOLoginButton />
+                        </Box>
+
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 23, mt: 2, fontSize: "0.9rem", pt: 25 }}>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 0.2       }}>
-                                <span>Don't have an account? </span>
+                                <span>Don't have an account?</span>
                                 <MuiLink
                                     component={Link}
                                     href="/register"
@@ -132,24 +143,12 @@ export default function LoginPage() {
                                      Sign up
                                 </MuiLink>
                             </Box>
-                            <MuiLink
-                                component={Link}
-                                href="/forgot-password"
-                                underline="hover"
-                                sx={{ fontWeight: 600 }}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    router.push("/forgot-password");
-                                }}
-                            >
-                                Forgot password?
-                            </MuiLink>
+                           
                         </Box>
                         </Box>
                     </Box>
                 </Box>
             </Container>
-            </Box>
         </>
     );
 }

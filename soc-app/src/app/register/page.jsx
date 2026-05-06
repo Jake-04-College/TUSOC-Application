@@ -3,19 +3,15 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
-import { AppBar, Box, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Select, TextField, Toolbar, MenuItem, Typography } from "@mui/material";
+import { Box, Container, CssBaseline, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Select, TextField, MenuItem, Typography, Link as MuiLink } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LocalizationProvider, DateField } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-
+import Link from "next/link";
 
 // Custom Components
-import { RedirectButton, SubmitButton, SSOLoginButton } from "../components/buttons/buttons";
-
-
-// Theme Import
-// import theme from ....
+import { SubmitButton, SSOLoginButton } from "../components/buttons/buttons";
+import NavBar from "../components/navbar/Navbar";
 
 export default function RegisterPage() {
     const {
@@ -73,21 +69,17 @@ export default function RegisterPage() {
     return (
         <>
             <CssBaseline />
-            <AppBar position="static">
-                <Toolbar></Toolbar>
-            </AppBar>
-            <Box sx={{ minHeight: "100vh", background: "linear-gradient(180deg, #2a68b9ff 0%, #ffffff 100%)", py: 4 }}>
+            <NavBar />
 
-
-                <Container maxWidth="sm">
-                    <Box sx={{ height: "100%", mt: 2 }}>
-                        <Box sx={{ p: 1, borderRadius: 2, boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.68)", backgroundColor: "background.paper" }}>
+            <Container maxWidth="sm">
+                <Box sx={{ minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "center", py: 4 }}>
+                    <Box sx={{ p: 2, borderRadius: 2, boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", backgroundColor: "background.paper" }}>
                             <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-                                <Box sx={{ mb: 1, pl: 0.5 }}>
-                                    <Typography variant="h3" sx={{ fontWeight: 800, textAlign: "left" }}>
+                                <Box sx={{ mb: 2, pl: 0.5 }}>
+                                    <Typography variant="h4" sx={{ fontWeight: 800, textAlign: "left" }}>
                                         Create Account.
                                     </Typography>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: 500, textAlign: "left", mt: 0.5 }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 500, textAlign: "left", mt: 0.5, color: "text.secondary" }}>
                                         Please enter your details.
                                     </Typography>
                                 </Box>
@@ -224,20 +216,24 @@ export default function RegisterPage() {
                                     <SubmitButton text="Sign Up" fullWidth />
                                 </Box>
 
-                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
-                                    <RedirectButton text="Already have an account? Login" link="login" />
-
-                                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
-                                        <SSOLoginButton />
-                                    </Box>
-
+                                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, justifyContent: "center", alignItems: "center", mt: 3 }}>
+                                    <Typography variant="body2" sx={{ textAlign: "center" }}>
+                                        Already have an account? 
+                                        <MuiLink
+                                            component={Link}
+                                            href="/login"
+                                            underline="hover"
+                                            sx={{ fontWeight: 600, ml: 0.5 }}
+                                        >
+                                            Login here
+                                        </MuiLink>
+                                    </Typography>
+                                    <SSOLoginButton />
                                 </Box>
                             </Box>
                         </Box>
                     </Box>
-
-                </Container>
-            </Box>
+            </Container>
         </>
     );
 }
