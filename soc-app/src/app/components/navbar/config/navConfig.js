@@ -142,11 +142,12 @@ export function buildDesktopSettingsMenuItems({ isLoggedIn, isManager, webView, 
 
 /* Function to build Mobile navigation bar items based on user status */
 export function buildMobileNavBarItems({ isLoggedIn, isManager, webView }) {
-  return Object.entries(mobileConfig)
+  // Reuse the DesktopMainConfig so mobile matches desktop buttons, but exclude web-only items
+  return Object.entries(DesktopMainConfig)
     .filter(([key, item]) => {
       if (item.isLoggedin && !isLoggedIn) return false;
       if (item.isManager && !isManager) return false;
-      if (item.webOnly && !webView) return false;
+      if (item.webOnly) return false; // desktop-only items should not appear on mobile
       return true;
     })
     .map(([value, item]) => ({
