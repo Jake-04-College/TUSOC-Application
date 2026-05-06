@@ -61,12 +61,12 @@ export function RedirectButton({ text, link, onClick, fullWidth = false, sx = {}
     );
 }
 
-export function SSOLoginButton({ provider = "google", fullWidth = false, sx = {}, ...props } = {}) {
+export function SSOLoginButton({ provider = null, fullWidth = false, sx = {}, ...props } = {}) {
     return (
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
-            onClick={() => (provider ? signIn(provider) : signIn())}
+        onClick={() => (provider ? signIn(provider, { callbackUrl: "/home" }) : signIn())}
             fullWidth={fullWidth}
             sx={sx}
             {...props}
