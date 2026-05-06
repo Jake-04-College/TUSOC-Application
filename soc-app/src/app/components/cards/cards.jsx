@@ -116,7 +116,7 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
         },
       }}
     >
-      <Box
+        <Box
         sx={{
           px: 2,
           pt: 1.5,
@@ -128,6 +128,7 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
       >
         <Avatar
           src={profilePic}
+          alt={username || 'Profile picture'}
           sx={{ width: 32, height: 32, bgcolor: '#0079d3' }}
         > {!profilePic && username?.charAt(0)?.toUpperCase()}
         </Avatar>

@@ -22,7 +22,11 @@ export default function ProfileClient({ userData, posts, session }) {
         <Card sx={{ mt: 4, p: 2 }}>
           <CardContent>
             <Stack spacing={2} alignItems="center">
-              <Avatar src={avatarSrc} sx={{ width: 100, height: 100 }}>
+              <Avatar
+                src={avatarSrc}
+                alt={userData?.username || 'Profile picture'}
+                sx={{ width: 100, height: 100 }}
+              >
                 {!avatarSrc && userData?.username?.charAt(0)?.toUpperCase()}
               </Avatar>
               <Typography variant="h5">{userData.username}</Typography>

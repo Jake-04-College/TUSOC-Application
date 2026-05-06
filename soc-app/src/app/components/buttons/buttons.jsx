@@ -5,13 +5,16 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import { useRouter } from "next/navigation";
 import SendIcon from '@mui/icons-material/Send';
 
-export function LoginButton() {
+export function LoginButton({ fullWidth = false, sx = {}, ...props } = {}) {
     const router = useRouter();
     return (
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
             onClick={() => router.push("/login")}
+            fullWidth={fullWidth}
+            sx={sx}
+            {...props}
         >
             {"Login with Existing Credentials"}
         </Button>
@@ -35,7 +38,7 @@ export function LogoutButton() {
     );
 }
 
-export function RedirectButton({ text, link, onClick }) {
+export function RedirectButton({ text, link, onClick, fullWidth = false, sx = {}, ...props }) {
     const router = useRouter();
 
     return (
@@ -47,6 +50,9 @@ export function RedirectButton({ text, link, onClick }) {
                 if (e.defaultPrevented) return;
                 router.push(link.startsWith("/") ? link : `/${link}`);
             }}
+            fullWidth={fullWidth}
+            sx={sx}
+            {...props}
 
         >
             {text}
@@ -54,12 +60,15 @@ export function RedirectButton({ text, link, onClick }) {
     );
 }
 
-export function SSOLoginButton({ provider = "google" } = {}) {
+export function SSOLoginButton({ provider = "google", fullWidth = false, sx = {}, ...props } = {}) {
     return (
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
             onClick={() => signIn(provider)}
+            fullWidth={fullWidth}
+            sx={sx}
+            {...props}
         >
             {"Sign in with SSO"}
         </Button>

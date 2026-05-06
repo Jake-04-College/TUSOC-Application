@@ -89,13 +89,18 @@ export default function DesktopNavbar({ session, status, isLoggedIn }) {
                     {isLoggedIn && (
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
-                                <IconButton
+                                    <IconButton
                                     onClick={handleOpenUserMenu}
                                     sx={{ p: 0 }}
                                     aria-controls="menu-user"
                                     aria-haspopup="true"
                                 >
-                                    <Avatar src={avatarSrc}>{!avatarSrc ? avatarFallback : null}</Avatar>
+                                    <Avatar
+                                        src={avatarSrc}
+                                        alt={session?.user?.username || session?.user?.name || "User avatar"}
+                                    >
+                                        {!avatarSrc ? avatarFallback : null}
+                                    </Avatar>
                                 </IconButton>
                             </Tooltip>
 

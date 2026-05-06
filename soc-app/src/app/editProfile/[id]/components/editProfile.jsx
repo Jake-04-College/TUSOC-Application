@@ -118,7 +118,11 @@ export default function EditProfile({ userData }) {
 
                     {formError ? <Alert severity="error">{formError}</Alert> : null}
 
-                    <Avatar src={previewUrl || undefined} sx={{ width: 100, height: 100, mx: "auto" }}>
+                    <Avatar
+                        src={previewUrl || undefined}
+                        alt={formData.username || 'Profile image preview'}
+                        sx={{ width: 100, height: 100, mx: "auto" }}
+                    >
                         {!previewUrl && formData.username?.charAt(0)?.toUpperCase()}
                     </Avatar>
 
