@@ -38,14 +38,24 @@ export async function POST(req) {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    // One-way like: add user once, increment likes once.
-    await collection.updateOne(
-        { _id: objectId, likedBy: { $ne: userId } },
-        {
-            $addToSet: { likedBy: userId },
-            $inc: { likes: 1 },
-        }
-    );
+    // Toggle like: if user already liked -> remove like, else add like.
+    const alreadyLiked = Array.isArray(post?.likedBy)
+        ? post.likedBy.map((item) => String(item)).includes(userId)
+        : false;
+
+    if (alreadyLiked) {
+        // remove like
+        await collection.updateOne(
+            { _id: objectId },
+            { $pull: { likedBy: userId }, $inc: { likes: -1 } }
+        );
+    } else {
+        // add like
+        await collection.updateOne(
+            { _id: objectId, likedBy: { $ne: userId } },
+            { $addToSet: { likedBy: userId }, $inc: { likes: 1 } }
+        );
+    }
 
     // Return latest count for UI refresh.
     const updatedPost = await collection.findOne(
@@ -59,7 +69,7 @@ export async function POST(req) {
 
     return NextResponse.json({
         ok: true,
-        isLiked: true,
+        isLiked: updatedLikedBy.includes(userId),
         likes: Math.max(0, Number(updatedPost?.likes || 0)),
     });
 }

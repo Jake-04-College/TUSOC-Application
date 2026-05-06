@@ -70,7 +70,7 @@ export default function ManagementPage() {
                 No societies found
               </Typography>
             ) : (
-              <List disablePadding>
+                    <List disablePadding>
                 {societies.map((s) => (
                   <ListItem key={s._id} divider secondaryAction={
                     <IconButton edge="end" aria-label="delete" color="error">
@@ -78,8 +78,8 @@ export default function ManagementPage() {
                     </IconButton>
                   }>
                     <ListItemText
-                      primary={s.Soc_Name}
-                      secondary={`${s.Member_Count || 0} members — ${s.Soc_Desc || "No description"}`}
+                      primary={s.Soc_Name || s.name}
+                      secondary={`${s.Member_Count || s.memberCount || 0} members — ${s.Soc_Desc || s.SocDesc || s.description || "No description"}`}
                     />
                   </ListItem>
                 ))}

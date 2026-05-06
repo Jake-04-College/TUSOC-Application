@@ -3,3 +3,4 @@ soc-app/.env.local
 /soc-app/node_modules
 soc-app/src/app/.env.local
 soc-app/src/app/.env.local
+.env.local

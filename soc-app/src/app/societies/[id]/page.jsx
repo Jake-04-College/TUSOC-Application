@@ -63,7 +63,7 @@ export default async function SocietyPage({ params }) {
 
   const posts = await db
     .collection("UserPosts")
-    .find({ username: safeSociety.username })
+    .find({ societyID: safeSociety._id })
     .sort({ timePosted: -1 })
     .toArray();
 

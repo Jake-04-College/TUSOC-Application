@@ -12,10 +12,11 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useRouter } from "next/navigation";
 import { buildDesktopNavBarItems, buildDesktopSettingsMenuItems } from "./config/navConfig";
 import { LoginButton, LogoutButton } from "../buttons/buttons";
+
+const logoUrl = "https://res.cloudinary.com/mgpimages/image/upload/v1778086813/image_2026-05-06_180013747_hzc8ue.png";
 
 export default function DesktopNavbar({ session, status, isLoggedIn }) {
     const isManager = null;
@@ -49,7 +50,12 @@ export default function DesktopNavbar({ session, status, isLoggedIn }) {
         <AppBar position="static" sx={{ display: { xs: "none", md: "block" } }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ mr: 1 }} />
+                    <Box
+                        component="img"
+                        src={logoUrl}
+                        alt="TUSOC logo"
+                        sx={{ width: 64, height: 64, mr: 1, objectFit: "contain" }}
+                    />
                     <Typography
                         variant="h6"
                         noWrap

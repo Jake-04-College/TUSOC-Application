@@ -77,8 +77,14 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
     if (!id || !currentUserId || isLoadingLike) return;
     setIsLoadingLike(true);
 
+    const prevLiked = isLiked;
+    const prevCount = likesCount;
+
+    // optimistic UI update
+    setIsLiked(!prevLiked);
+    setLikesCount(prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
+
     try {
-      //Back end likes the post 
       const res = await fetch('/api/post/toggleLike', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -91,10 +97,13 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
         throw new Error(payload?.error || 'Failed to toggle like');
       }
 
-      //uses the db to reflect the number of post 
+      // reconcile with server response
       setIsLiked(!!payload?.isLiked);
       setLikesCount(Math.max(0, parseInt(payload?.likes, 10) || 0));
     } catch (error) {
+      // rollback on error
+      setIsLiked(prevLiked);
+      setLikesCount(prevCount);
       console.error('Toggle like failed', error);
     } finally {
       setIsLoadingLike(false);
@@ -251,9 +260,8 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                 backgroundColor: 'transparent',
                 borderRadius: 4,
                 boxShadow: 'none',
-                width: { xs: '100%', sm: '80%' },
+                width: '100%',
                 height: 'auto',
-                mx: 'auto',
                 border: '2px solid #7777774d',
                 cursor: 'pointer',
                 transition: 'background-color 0.2s ease',
@@ -262,31 +270,32 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                 },
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 0 } }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: { xs: 1, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1.5, sm: 0 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 }, width: '100%' }}>
                     <Avatar
                         src={societyLogo}
                         alt="Society Icon"
-                        sx={{ width: 56, height: 56 }}
+                        sx={{ width: { xs: 40, sm: 56 }, height: { xs: 40, sm: 56 }, flexShrink: 0 }}
                     />
-                    <Box>
-                        <Typography variant='h5'>
-                            <b>{societyName}</b>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' }, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {societyName}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                             {membersCount} Members
                         </Typography>
                     </Box>
                 </Box>
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' }, display: 'flex', justifyContent: { xs: 'flex-end', sm: 'flex-start' } }}>
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', pt: { xs: 1, sm: 0 } }}>
                       <Button
                         variant="contained"
                         endIcon={<TrendingFlatIcon />}
                         onClick={handleJoin}
                         disabled={isJoining}
+                        size="small"
                         sx={{ width: { xs: '100%', sm: 'auto' } }}
                       >
-                        {isJoining ? 'Joining...' : 'Join society'}
+                        {isJoining ? 'Joining...' : 'Join'}
                       </Button>
                     </Box>
             </Box>

@@ -48,7 +48,7 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
             <CssBaseline />
             <Navbar />
 
-            <Box sx={{ position: "relative", width: "100%", height: 220, mb: 12 }}>
+            <Box sx={{ position: "relative", width: "100%", height: { xs: 120, sm: 220 }, mb: { xs: 8, sm: 12 } }}>
                 <Box
                     sx={{
                         position: "absolute",
@@ -63,10 +63,10 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
                     alt={name}
                     sx={{
                         position: "absolute",
-                        left: 200,
-                        bottom: -82,
-                        width: 160,
-                        height: 160,
+                        left: { xs: 12, sm: 200 },
+                        bottom: { xs: -50, sm: -82 },
+                        width: { xs: 100, sm: 160 },
+                        height: { xs: 100, sm: 160 },
                         border: "3px solid",
                         borderColor: "background.paper",
                         boxShadow: 2,
@@ -77,9 +77,10 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
                     variant="h4"
                     sx={{
                         position: "absolute",
-                        left: 380,
-                        bottom: -70,
+                        left: { xs: 120, sm: 380 },
+                        bottom: { xs: -40, sm: -70 },
                         fontWeight: 600,
+                        fontSize: { xs: '1.25rem', sm: '2rem' },
                     }}
                 >
                     {name}
@@ -96,7 +97,7 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
                         alignItems: "stretch",
                     }}
                 >
-                    <Box component="aside">
+                    <Box component="aside" sx={{ display: { xs: 'none', md: 'block' } }}>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                             Society Committee
                         </Typography>
@@ -106,7 +107,33 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
                     </Box>
 
                     <Box sx={{ height: "100%" }}>
-                        <Typography variant="h4" component="h1" align="center" sx={{ mb: 3 }}>
+                        <Box sx={{ display: { xs: 'block', md: 'none' }, mb: 2 }}>
+                            {!isMember ? (
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={handleJoin}
+                                    disabled={isJoining}
+                                    size="large"
+                                >
+                                    {isJoining ? "Joining..." : "Join Society"}
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    size="large"
+                                    sx={{
+                                        bgcolor: "#1976d2",
+                                        color: "white",
+                                        "&:hover": { bgcolor: "#1565c0" },
+                                    }}
+                                >
+                                    Events
+                                </Button>
+                            )}
+                        </Box>
+                        <Typography variant="h4" component="h1" align="center" sx={{ mb: 3, fontSize: { xs: '1.5rem', sm: '2rem' } }}>
                             Media Feed
                         </Typography>
 
@@ -126,7 +153,7 @@ export default function SocietyTemplate({ society, posts, session, isMember: has
                         )}
                     </Box>
 
-                    <Box component="aside" sx={{ pl: { xs: 4, md: 7 } }}>
+                    <Box component="aside" sx={{ display: { xs: 'none', md: 'block' }, pl: { xs: 4, md: 7 } }}>
                         <Card sx={{ mb: 2, width: 300, height: 500, bgcolor: "#e9e8e8" }}>
                             <CardContent
                                 sx={{

@@ -33,6 +33,10 @@ export default function ProfileClient({ userData, posts, session }) {
 
               <Typography color="text.secondary">{userData.courseCode ?? ""}</Typography>
 
+              {userData?.bio ? (
+                <Typography variant="body1" align="center" sx={{ mt: 1 }}>{userData.bio}</Typography>
+              ) : null}
+
               {isOwnProfile ? (
                 <Button variant="contained" onClick={() => router.push(`/editProfile/${encodeURIComponent(userData._id)}`)}>
                   Edit Profile
