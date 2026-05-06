@@ -22,11 +22,11 @@ export default function SocietyPage() {
         async function fetchPosts() {
             try {
                 const res = await fetch("/api/get/getSocietys");
-                if (!res.ok) throw new Error("Failed to load posts");
+                if (!res.ok) throw new Error("Failed to load societies");
                 const data = await res.json();
                 setPosts(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error("Failed to fetch posts", error);
+                console.error("Failed to fetch societies", error);
                 setPosts([]);
             } finally {
                 setIsLoading(false);

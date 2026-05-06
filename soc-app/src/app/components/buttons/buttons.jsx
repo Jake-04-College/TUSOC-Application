@@ -3,8 +3,6 @@
 import { Button } from "@mui/material";
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { login } from "../../../lib/actions/authactions"
 import SendIcon from '@mui/icons-material/Send';
 
 export function LoginButton() {
@@ -56,12 +54,12 @@ export function RedirectButton({ text, link, onClick }) {
     );
 }
 
-export function SSOLoginButton(provider) {
+export function SSOLoginButton({ provider = "google" } = {}) {
     return (
         <Button
             variant="contained"
             endIcon={<TrendingFlatIcon />}
-            onClick={() => login(provider)}
+            onClick={() => signIn(provider)}
         >
             {"Sign in with SSO"}
         </Button>
