@@ -196,7 +196,7 @@ export function MediaCard({ postId, _id, userID, username, timePosted, title, li
           size="small"
           sx={{ color: isLiked ? '#1976d2' : '#818384' }}
           onClick={handleLikeClick}
-          disabled={!currentUserId || isLoadingLike || isLiked}
+          disabled={!currentUserId || isLoadingLike}
         >
           <ThumbUpIcon sx={{ fontSize: '1.2rem', mr: 0.5 }} />
           <Typography variant="caption">{likesCount}</Typography>
@@ -251,8 +251,8 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                 backgroundColor: 'transparent',
                 borderRadius: 4,
                 boxShadow: 'none',
-                width: '80%',
-                height: '150px',
+                width: { xs: '100%', sm: '80%' },
+                height: 'auto',
                 mx: 'auto',
                 border: '2px solid #7777774d',
                 cursor: 'pointer',
@@ -262,7 +262,7 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                 },
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 0 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Avatar
                         src={societyLogo}
@@ -278,14 +278,17 @@ export function SocietyCard({ societyID, societyName, membersCount, societyDescr
                         </Typography>
                     </Box>
                 </Box>
-                    <Button
-                      variant="contained"
-                      endIcon={<TrendingFlatIcon />}
-                      onClick={handleJoin}
-                      disabled={isJoining}
-                    >
-                      {isJoining ? 'Joining...' : 'Join society'}
-                    </Button>
+                    <Box sx={{ width: { xs: '100%', sm: 'auto' }, display: 'flex', justifyContent: { xs: 'flex-end', sm: 'flex-start' } }}>
+                      <Button
+                        variant="contained"
+                        endIcon={<TrendingFlatIcon />}
+                        onClick={handleJoin}
+                        disabled={isJoining}
+                        sx={{ width: { xs: '100%', sm: 'auto' } }}
+                      >
+                        {isJoining ? 'Joining...' : 'Join society'}
+                      </Button>
+                    </Box>
             </Box>
 
             <Box sx={{ px: 2, pb: 2 }}>

@@ -33,11 +33,8 @@ export default function MobileNavbar({
   const handleChange = (_event, newValue) => {
     const target = items.find((item) => item.value === newValue)?.redirectLink;
 
-    if (target && target !== pathname) {
-      router.push(target);
-    } else {
-      router.push("/not-found");
-    }
+    if (!target || target === pathname) return;
+    router.push(target);
   };
 
   return (
@@ -60,7 +57,7 @@ export default function MobileNavbar({
           key={value}
           label={navName}
           value={value}
-          icon={<Icon />}
+          icon={Icon ? <Icon /> : null}
         />
       ))}
     </BottomNavigation>
