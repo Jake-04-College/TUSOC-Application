@@ -42,9 +42,12 @@ export default function UpdateSociety({ initialData }) {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [formError, setFormError] = React.useState("");
 
-    function handleChange(e) {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setFormData((current) => ({
+            ...current,
+            [name]: value,
+        }));
     }
 
     function handleImageChange(e, type) {
