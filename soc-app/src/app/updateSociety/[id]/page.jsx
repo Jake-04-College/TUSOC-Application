@@ -6,42 +6,48 @@ import { notFound, redirect } from "next/navigation";
 import { ObjectId } from "mongodb";
 import clientPromise from "../../../lib/mongoConnection";
 import { auth } from "../../../lib/auth";
-import EditSociety from "./components/EditSociety";
+import UpdateSociety from "./components/UpdateSociety";
 
-export default async function EditSocietyPage({ params }) {
+export default async function UpdateSocietyPage({ params }) {
     const session = await auth();
 
     if (!session?.user) {
         redirect("/login");
     }
 
-    const id = decodeURIComponent(params?.id || "").trim();
+    const resolvedParams = await params;
+    const idParam = resolvedParams?.id;
 
-    //if (!ObjectId.isValid(id)) {
-    //    notFound();
-    //}
-
-    const client = await clientPromise;
-    let query;
-
-    if (ObjectId.isValid(id)) {
-        query = { _id: new ObjectId(id) };
-    } else {
-        // fallback (optional)
-        query = { name: id }; 
+    if (!idParam) {
+        notFound();
     }
 
-    const society = await db.collection("SocietyInformation").findOne(query);
+    const id = decodeURIComponent(idParam).trim();
 
-    const initialData = {
-        name: society.Soc_Name || "",
-        description: society.Soc_Desc || "",
-        campus: society.Soc_Campus || "",
-        category: society.Soc_Category || "",
-        logo: society.Soc_Logo || "",
-        banner: society.Soc_Banner || "",
-        societyPath: `/society/${society._id.toString()}`
-    };
+if (!ObjectId.isValid(id)) {
+    notFound();
+}
 
-    return <EditSociety initialData={initialData} />;
+const client = await clientPromise;
+const db = client.db(process.env.MONGODB_DB_NAME);
+
+const society = await db
+    .collection("SocietyInformation")
+    .findOne({ _id: new ObjectId(id) });
+
+if (!society) {
+    notFound();
+}
+
+const initialData = {
+    Soc_Name: society.Soc_Name || "",
+    Soc_Desc: society.Soc_Desc || "",
+    Soc_Campus: society.Soc_Campus || "",
+    Soc_Category: society.Soc_Category || "",
+    Soc_Logo: society.Soc_Logo || "",
+    Soc_Banner: society.Soc_Banner || "",
+    societyPath: `/society/${society._id.toString()}`
+};
+
+    return <UpdateSociety initialData={initialData} />;
 }
